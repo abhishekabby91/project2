@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Fraunces } from "next/font/google";
 import { site, siteUrl } from "@/content/site";
+import { indexingAllowed } from "@/lib/indexing";
 import { themeCss } from "@/lib/theme";
 import { organizationSchema, websiteSchema } from "@/lib/schema";
 import { JsonLd } from "@/components/seo/JsonLd";
@@ -51,11 +52,14 @@ export const metadata: Metadata = {
     title: `${site.businessName} | ${site.tagline}`,
     description: site.description,
   },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1 },
-  },
+  // Off until verification.ts is signed off and NEXT_PUBLIC_SITE_URL is set.
+  robots: indexingAllowed()
+    ? {
+        index: true,
+        follow: true,
+        googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1 },
+      }
+    : { index: false, follow: false, nocache: true },
   ...(process.env.GOOGLE_SITE_VERIFICATION
     ? { verification: { google: process.env.GOOGLE_SITE_VERIFICATION } }
     : {}),

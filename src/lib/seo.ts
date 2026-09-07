@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { site, siteUrl } from "@/content/site";
+import { indexingAllowed } from "./indexing";
 
 interface PageMetaOptions {
   title: string;
@@ -40,7 +41,8 @@ export function pageMetadata({
     title: { absolute: fullTitle },
     description,
     alternates: { canonical: url },
-    robots: noIndex
+    // A page may opt out; an unsigned-off deployment opts every page out.
+    robots: noIndex || !indexingAllowed()
       ? { index: false, follow: false }
       : {
           index: true,
