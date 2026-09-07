@@ -1,20 +1,25 @@
 #!/usr/bin/env node
 /**
- * Pre-launch content check for a client fork.
+ * Pre-launch content check.
  *
  *   npm run check:content
  *
- * Catches the three ways a template-built site embarrasses you:
+ * Five failure classes, in rough order of how much damage they do:
  *
- *   1. LEFTOVERS — content from another region or firm still present, because
- *      a file was never opened. This is how a Sacramento firm ships a
- *      "Serving Central Texas" stat and an Austin office page.
- *   2. PLACEHOLDERS — the markers this template ships with, plus reserved
- *      example domains and 555 phone numbers, reaching production.
- *   3. DUPLICATE COPY — default prose still byte-identical to the template,
- *      which makes every site you sell a near-duplicate of every other one.
- *   4. UNVERIFIED CLAIMS — statistics, credentials and testimonials that no
- *      named person has signed off. A fabricated figure and a real one look
+ *   1. PLACEHOLDERS — the markers this scaffold ships with, reserved example
+ *      domains and unset phone numbers, reaching production.
+ *   2. LEFTOVERS — vocabulary from the template this was forked from, or a
+ *      place the business does not serve, still present because a file was
+ *      never opened.
+ *   3. DOORWAY PAGES — service x city pages generated from cities that have no
+ *      genuinely local content, or whose "local" notes are shared with another
+ *      city. Thirty pages that differ only by a place name is the pattern
+ *      Google has demoted since 2015, and it is the specific way this vertical
+ *      goes wrong.
+ *   4. CATALOG INTEGRITY — a package pointing at a service, theme, occasion or
+ *      city that does not exist, so a page links somewhere that 404s.
+ *   5. UNVERIFIED CLAIMS — prices, service areas, policies and photographs that
+ *      no named person has signed off. A fabricated price and a real one are
  *      identical in source, so this is the one thing a script cannot judge;
  *      content/verification.ts records the human attestation instead.
  *
@@ -39,139 +44,223 @@ const sources = Object.fromEntries(
   files.map((f) => [f, readFileSync(join(contentDir, f), "utf8")]),
 );
 
-/** Line number of the first occurrence of `needle`, 1-indexed. */
-const lineOf = (source, needle) => {
-  const idx = source.indexOf(needle);
-  return idx === -1 ? null : source.slice(0, idx).split("\n").length;
-};
+/** Line number of a string offset, 1-indexed. */
+const lineAt = (source, index) => source.slice(0, index).split("\n").length;
+
+/**
+ * Comment lines, so a rule about published copy doesn't fire on the note
+ * telling you to fix the copy. Block comments and `//` lines both count.
+ */
+function commentLines(source) {
+  const lines = source.split("\n");
+  const isComment = new Set();
+  let inBlock = false;
+  lines.forEach((line, i) => {
+    const trimmed = line.trim();
+    if (inBlock) {
+      isComment.add(i + 1);
+      if (trimmed.includes("*/")) inBlock = false;
+      return;
+    }
+    if (trimmed.startsWith("//")) { isComment.add(i + 1); return; }
+    if (trimmed.startsWith("/*")) {
+      isComment.add(i + 1);
+      if (!trimmed.includes("*/")) inBlock = true;
+    }
+  });
+  return isComment;
+}
+
+const comments = Object.fromEntries(
+  Object.entries(sources).map(([f, s]) => [f, commentLines(s)]),
+);
+
+/** Every match of `pattern` in published copy, skipping comment lines. */
+function* inCopy(file, source, pattern) {
+  const rx = new RegExp(pattern.source, pattern.flags.includes("g") ? pattern.flags : pattern.flags + "g");
+  for (const m of source.matchAll(rx)) {
+    const line = lineAt(source, m.index);
+    if (comments[file].has(line)) continue;
+    yield { text: m[0], line };
+  }
+}
 
 /* ── 1. Placeholders ─────────────────────────────────────────────────────── */
 
 const placeholders = [
-  { pattern: /PLACEHOLDER/i, label: "PLACEHOLDER marker" },
+  // Case-sensitive: the marker is shouted, the word "placeholder" in a comment
+  // explaining the marker is not a defect.
+  { pattern: /PLACEHOLDER/, label: "PLACEHOLDER marker" },
   { pattern: /\bexample\.com\b/i, label: "example.com address" },
-  { pattern: /linkedin\.com\/in\/example/i, label: "example LinkedIn URL" },
-  { pattern: /linkedin\.com\/company\/example/i, label: "example LinkedIn URL" },
-  { pattern: /facebook\.com\/example/i, label: "example Facebook URL" },
-  { pattern: /\bExample (State )?University\b/, label: "Example University" },
-  { pattern: /\bExample [A-Z][a-z]+ (Group|Partners|Construction)\b/, label: "Example company name" },
-  // NANP reserved range: 555-0100 through 555-0199 are fictional by convention.
-  { pattern: /555-01\d\d/, label: "reserved 555-01xx phone number" },
+  { pattern: /\byourdomain\b/i, label: "yourdomain address" },
+  // An Indian mobile is 10 digits starting 6-9. All-zeros is the unset value
+  // this scaffold ships; 12345 patterns are the other common fake.
+  { pattern: /\+?91[\s-]?0{5}[\s-]?0{5}/, label: "unset +91 phone number" },
+  { pattern: /\b910{10}\b/, label: "unset WhatsApp number" },
+  { pattern: /\b(?:\+?91[\s-]?)?1234567890\b/, label: "sequential fake phone number" },
 ];
 
 for (const [file, source] of Object.entries(sources)) {
   for (const { pattern, label } of placeholders) {
-    const m = source.match(pattern);
-    if (m) err(file, `${label} still present`, `line ${lineOf(source, m[0])}: "${m[0]}"`);
-  }
-}
-
-/* ── 2. Geographic and temporal leftovers ────────────────────────────────── */
-
-const siteSrc = sources["site.ts"] ?? "";
-const locationsSrc = sources["locations.ts"] ?? "";
-
-const firmState = siteSrc.match(/state:\s*"([A-Z]{2})"/)?.[1];
-const firmCity = siteSrc.match(/city:\s*"([^"]+)"/)?.[1];
-const foundedYear = Number(siteSrc.match(/foundedYear:\s*(\d{4})/)?.[1]);
-
-/** Every state code and city the firm actually claims, from site + locations. */
-const claimedStates = new Set(
-  [...siteSrc.matchAll(/state:\s*"([A-Z]{2})"/g), ...locationsSrc.matchAll(/state:\s*"([A-Z]{2})"/g)]
-    .map((m) => m[1]),
-);
-const claimedCities = new Set(
-  [...siteSrc.matchAll(/city:\s*"([^"]+)"/g), ...locationsSrc.matchAll(/city:\s*"([^"]+)"/g)]
-    .map((m) => m[1]),
-);
-
-// Places the firm actually claims: office cities and states, plus every entry
-// in an `areasServed` list. A region mentioned in prose is a leftover only if
-// it has no relationship to any of them.
-const claimedPlaces = new Set([
-  ...claimedCities,
-  ...[...claimedStates].map(stateName),
-  ...[...claimedStates],
-]);
-for (const m of locationsSrc.matchAll(/areasServed:\s*\[([\s\S]*?)\]/g)) {
-  for (const a of m[1].matchAll(/"([^"]+)"/g)) claimedPlaces.add(a[1]);
-}
-
-/**
- * Regions that commonly survive a rebrand. A hit is only an error when the
- * region neither contains nor is contained by something the firm claims —
- * so "Central Texas" passes for an Austin, TX firm (it contains "Texas"), and
- * "Williamson County" passes when it's in areasServed.
- */
-const REGIONS = [
-  "Central Texas", "Texas", "Austin", "Round Rock", "Georgetown", "Cedar Park",
-  "Pflugerville", "Hutto", "Leander", "Williamson County", "Travis County",
-  "California", "Sacramento", "Central Valley", "New York", "Florida", "Illinois",
-];
-
-const relatedToClaim = (region) =>
-  [...claimedPlaces].some(
-    (place) =>
-      place.length > 2 &&
-      (region.includes(place) || place.includes(region)),
-  );
-
-for (const [file, source] of Object.entries(sources)) {
-  for (const region of REGIONS) {
-    if (!new RegExp(`\\b${region}\\b`).test(source)) continue;
-    if (relatedToClaim(region)) continue;
-    err(
-      file,
-      `references "${region}", which is nowhere this firm operates`,
-      `line ${lineOf(source, region)} — left over from the template, or add it to a location's areasServed`,
-    );
-  }
-
-  // "since YYYY" in prose must agree with foundedYear.
-  for (const m of source.matchAll(/since (\d{4})/g)) {
-    if (foundedYear && Number(m[1]) !== foundedYear) {
-      err(
-        file,
-        `says "since ${m[1]}" but site.foundedYear is ${foundedYear}`,
-        `line ${lineOf(source, m[0])}`,
-      );
+    for (const hit of inCopy(file, source, pattern)) {
+      err(file, `${label} still present`, `line ${hit.line}: "${hit.text}"`);
     }
   }
 }
 
-function stateName(code) {
-  const map = {
-    TX: "Texas", CA: "California", NY: "New York", FL: "Florida", IL: "Illinois",
-    WA: "Washington", OR: "Oregon", CO: "Colorado", AZ: "Arizona", GA: "Georgia",
-    NC: "North Carolina", PA: "Pennsylvania", OH: "Ohio", MI: "Michigan", MA: "Massachusetts",
-  };
-  return map[code] ?? code;
-}
+/* ── 2. Leftovers from the template this was forked from ─────────────────── */
 
-// Location slugs should match their own city/state.
-for (const m of locationsSrc.matchAll(/slug:\s*"([a-z-]+)"/g)) {
-  const slug = m[1];
-  const after = locationsSrc.slice(locationsSrc.indexOf(m[0]));
-  const city = after.match(/city:\s*"([^"]+)"/)?.[1] ?? "";
-  const state = after.match(/state:\s*"([A-Z]{2})"/)?.[1] ?? "";
-  const expected = `${city.toLowerCase().replace(/[^a-z]+/g, "-")}-${state.toLowerCase()}`;
-  if (slug !== expected) {
-    err("locations.ts", `slug "${slug}" doesn't match its city/state (expected "${expected}")`,
-      `line ${lineOf(locationsSrc, m[0])} — the URL will read wrong`);
+/**
+ * This scaffold was forked from a US CPA template. Its vocabulary is the most
+ * likely thing to survive into a decoration site unnoticed, and it reads as
+ * obviously wrong to a visitor in Noida.
+ */
+const FOREIGN_VOCABULARY = [
+  "CPA", "IRS", "tax planning", "bookkeeping", "payroll", "audit engagement",
+  "Central Texas", "Austin", "Round Rock", "Williamson County", "Sacramento",
+  "AICPA", "Enrolled Agent", "1099", "W-2", "fiscal year",
+];
+
+for (const [file, source] of Object.entries(sources)) {
+  for (const term of FOREIGN_VOCABULARY) {
+    const rx = new RegExp(`\\b${term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`, "i");
+    for (const hit of inCopy(file, source, rx)) {
+      err(file, `references "${hit.text}", which is left over from the CPA template`,
+        `line ${hit.line} — this is a decoration business in Delhi NCR`);
+    }
   }
 }
 
-/* ── 3. Duplicate copy ───────────────────────────────────────────────────── */
+/* ── 3. Doorway pages ────────────────────────────────────────────────────── */
+
+/**
+ * The service x city matrix is where this vertical produces thin pages. The
+ * route and the sitemap both require a city to carry real local content before
+ * a pairing generates; this asserts the same rule at content level, and adds
+ * the one a route cannot check — that two cities are not sharing their notes.
+ *
+ * Thresholds must stay in step with `pairIsSubstantive` in
+ * src/app/[service]/[city]/page.tsx and src/app/sitemap.ts.
+ */
+const MIN_LOCALITIES = 3;
+const MIN_LOCAL_NOTES = 2;
+
+{
+  const src = sources["cities.ts"] ?? "";
+  // Each city block runs from one `slug:` to the next.
+  const blocks = [...src.matchAll(/slug:\s*"([a-z0-9-]+)",\s*\n\s*name:\s*"([^"]+)"/g)];
+
+  const noteFingerprints = new Map(); // fingerprint -> first city that used it
+
+  for (let i = 0; i < blocks.length; i++) {
+    const [slug, name] = [blocks[i][1], blocks[i][2]];
+    const start = blocks[i].index;
+    const end = i + 1 < blocks.length ? blocks[i + 1].index : src.length;
+    const block = src.slice(start, end);
+
+    const localities = (block.match(/\{\s*slug:\s*"[a-z0-9-]+",\s*name:/g) ?? []).length;
+    const notesBlock = block.match(/localNotes:\s*\[([\s\S]*?)\n\s{4}\]/)?.[1] ?? "";
+    const notes = [...notesBlock.matchAll(/"((?:[^"\\]|\\.)*)"/g)].map((m) => m[1]);
+
+    if (localities < MIN_LOCALITIES) {
+      err("cities.ts",
+        `"${name}" has ${localities} localit${localities === 1 ? "y" : "ies"} (needs ${MIN_LOCALITIES})`,
+        `line ${lineAt(src, start)} — every ${slug} service page is suppressed until it has real coverage`);
+    }
+    if (notes.length < MIN_LOCAL_NOTES) {
+      err("cities.ts",
+        `"${name}" has ${notes.length} local note(s) (needs ${MIN_LOCAL_NOTES})`,
+        `line ${lineAt(src, start)} — without these, its service pages are another city's with the name swapped`);
+    }
+
+    for (const note of notes) {
+      // Compare the note with every place name stripped out. Two cities whose
+      // notes differ only by "Noida" vs "Gurugram" are the same page twice.
+      const generic = note
+        .replace(new RegExp(blocks.map((b) => b[2]).join("|"), "gi"), "«city»")
+        .replace(/\s+/g, " ")
+        .toLowerCase()
+        .trim();
+      const hash = fingerprint(generic);
+      const seen = noteFingerprints.get(hash);
+      if (seen && seen !== name) {
+        err("cities.ts",
+          `"${name}" and "${seen}" share a local note with only the place name changed`,
+          `"${note.slice(0, 70)}…" — this is what makes a doorway page; write what is actually different`);
+      } else if (!seen) {
+        noteFingerprints.set(hash, name);
+      }
+    }
+  }
+}
+
+/* ── 4. Catalog integrity ────────────────────────────────────────────────── */
+
+/**
+ * A package that lists a service, theme, occasion or city that does not exist
+ * renders a link to a page that 404s. Cheap to check, invisible until a
+ * customer hits it.
+ */
+{
+  const slugsIn = (file, exportName) => {
+    const src = sources[file] ?? "";
+    const body = src.slice(src.indexOf(`export const ${exportName}`));
+    return new Set([...body.matchAll(/^\s{4}slug:\s*"([a-z0-9-]+)"/gm)].map((m) => m[1]));
+  };
+
+  const known = {
+    services: slugsIn("services.ts", "services"),
+    occasions: slugsIn("occasions.ts", "occasions"),
+    themes: slugsIn("themes.ts", "themes"),
+    cities: slugsIn("cities.ts", "cities"),
+  };
+
+  const pkgSrc = sources["packages.ts"] ?? "";
+  const pkgBlocks = [...pkgSrc.matchAll(/^\s{4}slug:\s*"([a-z0-9-]+)"/gm)];
+
+  for (let i = 0; i < pkgBlocks.length; i++) {
+    const pkg = pkgBlocks[i][1];
+    const start = pkgBlocks[i].index;
+    const end = i + 1 < pkgBlocks.length ? pkgBlocks[i + 1].index : pkgSrc.length;
+    const block = pkgSrc.slice(start, end);
+
+    for (const [field, valid] of Object.entries(known)) {
+      const list = block.match(new RegExp(`${field}:\\s*\\[([^\\]]*)\\]`))?.[1];
+      if (list == null) continue;
+      for (const m of list.matchAll(/"([a-z0-9-]+)"/g)) {
+        if (!valid.has(m[1])) {
+          err("packages.ts", `package "${pkg}" lists ${field.slice(0, -1)} "${m[1]}", which does not exist`,
+            `line ${lineAt(pkgSrc, start)} — the page will link to a 404`);
+        }
+      }
+    }
+  }
+
+  // And the reverse: a service pointing at a package that was deleted.
+  const pkgSlugs = new Set(pkgBlocks.map((b) => b[1]));
+  for (const file of ["services.ts", "occasions.ts", "themes.ts"]) {
+    const src = sources[file] ?? "";
+    for (const m of src.matchAll(/packages:\s*\[([^\]]*)\]/g)) {
+      for (const p of m[1].matchAll(/"([a-z0-9-]+)"/g)) {
+        if (!pkgSlugs.has(p[1])) {
+          err(file, `references package "${p[1]}", which does not exist`,
+            `line ${lineAt(src, m.index)} — delete the reference or restore the package`);
+        }
+      }
+    }
+  }
+}
+
+/* ── 5. Duplicate copy ───────────────────────────────────────────────────── */
 
 if (!existsSync(baselinePath)) {
   warn("scripts", "template-baseline.json missing — duplicate-copy check skipped",
-    "run `node scripts/build-baseline.mjs` in the template repo");
+    "run `node scripts/build-baseline.mjs` in the template repo, not in a client fork");
 } else {
   const baseline = JSON.parse(readFileSync(baselinePath, "utf8"));
-  // Files where shipping the default is a real SEO problem, and how strict to be.
   const budgets = {
-    "services.ts": 0.15, "industries.ts": 0.15, "posts.ts": 0.0,
-    "copy.ts": 0.5, "firm.ts": 0.3, "faqs.ts": 0.4,
+    "services.ts": 0.15, "occasions.ts": 0.15, "themes.ts": 0.15,
+    "packages.ts": 0.1, "copy.ts": 0.5, "faqs.ts": 0.4, "cities.ts": 0.05,
   };
 
   for (const [file, limit] of Object.entries(budgets)) {
@@ -186,67 +275,70 @@ if (!existsSync(baselinePath)) {
       const report = limit === 0 ? err : ratio > limit + 0.25 ? err : warn;
       report(file,
         `${pct}% of prose is still the template default (limit ${Math.round(limit * 100)}%)`,
-        `${unchanged.length} of ${current.length} strings unchanged — every site you ship with these is a near-duplicate`);
+        `${unchanged.length} of ${current.length} strings unchanged — every site shipped with these is a near-duplicate`);
     }
   }
 }
 
-/* ── 4. Sign-off on public claims ────────────────────────────────────────── */
+/* ── 6. Sign-off on public claims ────────────────────────────────────────── */
 
 /**
- * The checks above compare text. They cannot tell an invented statistic from a
- * true one, which is exactly what a rewrite produces when nobody asked the firm.
- * So require a named human attestation per claim before the site can ship.
+ * The checks above compare text. They cannot tell an invented price from a real
+ * one, or a service area the team covers from one it does not. So require a
+ * named human attestation per claim before the site can ship.
+ *
+ * The key list is read from verification.ts rather than hardcoded, so adding a
+ * new class of claim there automatically starts gating on it.
  */
 {
   const src = sources["verification.ts"];
   if (!src) {
     warn("verification.ts", "missing — public claims are unverified",
-      "restore it from the template; the site should not ship without sign-off");
+      "restore it; the site should not ship without sign-off");
   } else {
-    const attestations = [
-      ...src.matchAll(/(\w+):\s*\{([^}]*)\}/g),
-    ].filter(([, key]) => key !== "unverified");
+    const body = src.slice(src.indexOf("export const verification"));
+    const attestations = [...body.matchAll(/^\s{2}(\w+):\s*\{([^}]*)\}/gm)];
 
-    const descriptions = Object.fromEntries(
-      [...src.matchAll(/^\s{2}(\w+):\s*"([^"]*)"/gm)].map((m) => [m[1], m[2]]),
-    );
+    // Descriptions live in the doc comment above each key.
+    const describe = (key) => {
+      const at = body.indexOf(`\n  ${key}:`);
+      const before = body.slice(0, at);
+      return before.match(/\/\*\*\s*([^*]+?)\s*\*\/\s*$/)?.[1]?.replace(/\s+/g, " ") ?? key;
+    };
 
-    // Testimonials need no sign-off when there are none to publish.
-    const noTestimonials = /export const testimonials[^=]*=\s*\[\s*\]/.test(
-      sources["testimonials.ts"] ?? "",
-    );
+    // Reviews need no sign-off when there are none to publish.
+    const noReviews = /export const reviews[^=]*=\s*\[\s*\]/.test(sources["reviews.ts"] ?? "");
 
-    for (const [, key, body] of attestations) {
-      if (!(key in { statistics: 1, credentials: 1, testimonials: 1, locations: 1,
-                     services: 1, teamBios: 1, legalPages: 1, articles: 1,
-                     cookieDisclosure: 1 })) continue;
-      if (key === "testimonials" && noTestimonials) continue;
+    if (attestations.length === 0) {
+      err("verification.ts", "no attestations found", "the sign-off gate is not running — check the file's shape");
+    }
 
-      const verified = /verified:\s*true/.test(body) || body.includes("...unverified") === false && /verified:\s*true/.test(body);
-      const by = body.match(/by:\s*"([^"]*)"/)?.[1]?.trim() ?? "";
-      const date = body.match(/date:\s*"([^"]*)"/)?.[1]?.trim() ?? "";
-      const label = descriptions[key] ?? key;
+    for (const [, key, fields] of attestations) {
+      if (key === "reviews" && noReviews) continue;
+
+      const verified = /verified:\s*true/.test(fields);
+      const by = fields.match(/by:\s*"([^"]*)"/)?.[1]?.trim() ?? "";
+      const date = fields.match(/date:\s*"([^"]*)"/)?.[1]?.trim() ?? "";
 
       if (!verified) {
-        err("verification.ts", `"${key}" is not signed off`, label);
+        err("verification.ts", `"${key}" is not signed off`, describe(key));
       } else if (!by || !date) {
         err("verification.ts", `"${key}" is marked verified but has no name or date`,
           "record who confirmed it and when — an unattributed sign-off is not one");
       } else if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
         err("verification.ts", `"${key}" has an unparseable date "${date}"`, "use YYYY-MM-DD");
       } else if (new Date(date) > new Date()) {
-        err("verification.ts", `"${key}" is signed off with a future date "${date}"`, label);
+        err("verification.ts", `"${key}" is signed off with a future date "${date}"`, describe(key));
       }
     }
   }
 }
 
-/* ── 5. Agency documents must not ship to a client ───────────────────────── */
+/* ── 7. Agency documents must not ship to a client ───────────────────────── */
 
 if (existsSync(join(root, "docs", "agency"))) {
   warn("docs/agency", "agency-internal documents are still present",
-    "delete docs/agency/ before handing this repository to a client — it holds your pricing");
+    "delete docs/agency/ before handing this repository over — it holds your pricing");
 }
 
 /* ── Report ──────────────────────────────────────────────────────────────── */
@@ -259,7 +351,7 @@ if (warnings.length) {
 }
 if (errors.length) {
   console.error(`\n${errors.length} error(s):\n${fmt(errors, "✗")}`);
-  console.error("\nContent check failed. Fix the above before deploying this client site.\n");
+  console.error("\nContent check failed. Fix the above before deploying this site.\n");
   process.exit(1);
 }
 console.log(`\n✓ Content check passed${warnings.length ? ` (${warnings.length} warning(s))` : ""}.\n`);
