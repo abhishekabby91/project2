@@ -36,7 +36,10 @@ export default function ContactPage() {
             >
               <Icon name="whatsapp" className="mt-0.5 h-5 w-5 shrink-0 text-accent" />
               <span>
-                <span className="block font-semibold text-primary">{copy.contact.whatsappTitle}</span>
+                {/* The number is shown, not just the word. Calls and WhatsApp
+                    go to different lines here, and someone saving one of them
+                    to their phone needs to know which they saved. */}
+                <span className="block font-semibold text-primary">{site.whatsappDisplay}</span>
                 <span className="mt-1 block text-sm leading-relaxed text-ink-muted">
                   {copy.contact.whatsappBody}
                 </span>

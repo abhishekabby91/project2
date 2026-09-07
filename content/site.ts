@@ -22,10 +22,25 @@ export interface SiteConfig {
    * arrive there than through any form. E.164, no plus sign.
    */
   whatsapp: string;
+  /** How the WhatsApp number is written for a human. It is a different number
+   *  from the phone line, so the site has to be able to show both. */
+  whatsappDisplay: string;
   whatsappMessage: string;
-  email: string;
-  /** Operating hours. Same-day booking is a real differentiator here. */
+  /**
+   * Null until a real mailbox exists. Every mailto on the site disappears
+   * while it is null, and the address is left out of structured data — a
+   * plausible-looking address nobody reads is worse than no address at all,
+   * and the privacy policy has to point somewhere a request actually arrives.
+   */
+  email: string | null;
+  /** Operating hours, as written for a person. */
   hours: { days: string; hours: string }[];
+  /**
+   * The same hours in a form Google can parse, for openingHoursSpecification.
+   * Kept beside the human version rather than parsed out of it — "Same-day
+   * bookings / subject to availability" is a sentence, not a time range.
+   */
+  hoursSpec: { days: string[]; opens: string; closes: string }[];
   /** Registered or operating address. Required for LocalBusiness schema. */
   address: {
     street: string;
@@ -53,15 +68,33 @@ export const site: SiteConfig = {
   logo: null,
   monogram: "HA",
 
-  phone: "+91 00000 00000",
-  phoneHref: "+910000000000",
-  whatsapp: "910000000000",
+  /* Given by the owner on 7 September 2026. Two different numbers on purpose:
+     calls go to one line, WhatsApp to another. Neither is signed off in
+     content/verification.ts yet — that is the owner's to do, not the
+     builder's. */
+  phone: "+91 87007 97243",
+  phoneHref: "+918700797243",
+  whatsapp: "919990597192",
+  whatsappDisplay: "+91 99905 97192",
   whatsappMessage: "Hi! I'd like to book a decoration. My date is ",
-  email: "hello@happyarc.in",
+  /* ⚠️  No mailbox yet. The owner is setting one up and will send the address.
+     Leave this null until then — see the note on the interface above. */
+  email: null,
 
   hours: [
     { days: "Monday – Sunday", hours: "9:00 AM – 9:00 PM" },
     { days: "Same-day bookings", hours: "Subject to slot availability" },
+  ],
+
+  /* ⚠️  Unconfirmed, like the hours above. Correct these with the owner. */
+  hoursSpec: [
+    {
+      days: [
+        "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday",
+      ],
+      opens: "09:00",
+      closes: "21:00",
+    },
   ],
 
   address: {

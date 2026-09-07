@@ -4,6 +4,7 @@ import { pageMetadata } from "@/lib/seo";
 import { Section, SectionHeading } from "@/components/ui/Section";
 import { Breadcrumbs } from "@/components/layout/Breadcrumbs";
 import { LegalNotice } from "@/components/legal/LegalNotice";
+import { ContactRoute } from "@/components/layout/ContactRoute";
 
 export const metadata = pageMetadata({
   title: "Privacy Policy",
@@ -69,8 +70,8 @@ export default function PrivacyPage() {
           <h2>Your rights</h2>
           <p>
             You can ask us what information we hold about you, ask us to correct it, and ask us to
-            delete it where we are not required to keep it. Write to{" "}
-            <a href={`mailto:${site.email}`}>{site.email}</a> and we will respond.
+            delete it where we are not required to keep it. Contact us on{" "}
+            <ContactRoute /> and we will respond.
           </p>
 
           <h2>Cookies</h2>
@@ -118,7 +119,7 @@ export default function PrivacyPage() {
 
           <h2>Contact</h2>
           <p>
-            Questions about this policy go to <a href={`mailto:${site.email}`}>{site.email}</a>.
+            Questions about this policy go to <ContactRoute />.
           </p>
         </div>
       </Section>

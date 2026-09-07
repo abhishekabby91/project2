@@ -38,13 +38,15 @@ export function Footer() {
                 <Icon name="phone" className="h-4 w-4" />
                 {site.phone}
               </a>
-              <a
-                href={`mailto:${site.email}`}
-                className="flex items-center gap-2 text-white/80 hover:text-primary-fg"
-              >
-                <Icon name="mail" className="h-4 w-4" />
-                {site.email}
-              </a>
+              {site.email ? (
+                <a
+                  href={`mailto:${site.email}`}
+                  className="flex items-center gap-2 text-white/80 hover:text-primary-fg"
+                >
+                  <Icon name="mail" className="h-4 w-4" />
+                  {site.email}
+                </a>
+              ) : null}
             </div>
           </div>
 

@@ -17,11 +17,19 @@ const substantive = (citySlug: string) => {
   return Boolean(city && city.localities.length >= 3 && city.localNotes.length >= 2);
 };
 
+/**
+ * No `lastModified`.
+ *
+ * Stamping every URL with the build time says all eighty-five pages changed
+ * the moment the site was deployed, which is false on all but a couple of
+ * them. Google's guidance is explicit that it discounts lastmod once it finds
+ * it unreliable — so a wrong date is worse than none, and it takes the
+ * credibility of the honest dates down with it. Add real per-page dates only
+ * if the content ever starts carrying them.
+ */
 export default function sitemap(): MetadataRoute.Sitemap {
-  const now = new Date();
   const url = (path: string, priority: number, changeFrequency: "weekly" | "monthly") => ({
     url: `${siteUrl}${path === "/" ? "" : path}`,
-    lastModified: now,
     changeFrequency,
     priority,
   });

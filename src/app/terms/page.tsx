@@ -3,6 +3,7 @@ import { pageMetadata } from "@/lib/seo";
 import { Section, SectionHeading } from "@/components/ui/Section";
 import { Breadcrumbs } from "@/components/layout/Breadcrumbs";
 import { LegalNotice } from "@/components/legal/LegalNotice";
+import { ContactRoute } from "@/components/layout/ContactRoute";
 
 export const metadata = pageMetadata({
   title: "Terms of Service",
@@ -72,7 +73,7 @@ export default function TermsPage() {
 
           <h2>Contact</h2>
           <p>
-            Questions about these terms go to <a href={`mailto:${site.email}`}>{site.email}</a>.
+            Questions about these terms go to <ContactRoute />.
           </p>
         </div>
       </Section>

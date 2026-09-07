@@ -1,6 +1,9 @@
 import { site, siteUrl } from "@/content/site";
 import { aggregateRating, reviews } from "@/content/reviews";
 import { cities } from "@/content/cities";
+import { services } from "@/content/services";
+import { packages, lowestPrice, highestPrice } from "@/content/packages";
+import { verification } from "@/content/verification";
 import type { City, DecorPackage, FaqItem, Service } from "@/content/types";
 
 /**
@@ -37,10 +40,85 @@ function telephone(): string | null {
   return /^\+?9?1?0{5,}$/.test(site.phoneHref.replace(/\s/g, "")) ? null : site.phoneHref;
 }
 
+/**
+ * The two ways to reach a person, as separate contact points.
+ *
+ * Calls and WhatsApp go to different numbers here, which is ordinary in this
+ * market and invisible to Google unless it is said explicitly.
+ */
+function contactPoints(): Json[] {
+  const points: Json[] = [];
+  const phone = telephone();
+  if (phone) {
+    points.push({
+      "@type": "ContactPoint",
+      contactType: "customer service",
+      telephone: phone,
+      areaServed: "IN",
+      availableLanguage: ["en", "hi"],
+    });
+  }
+  if (site.whatsapp && !/^9?1?0{5,}$/.test(site.whatsapp)) {
+    points.push({
+      "@type": "ContactPoint",
+      contactType: "reservations",
+      telephone: `+${site.whatsapp}`,
+      areaServed: "IN",
+      availableLanguage: ["en", "hi"],
+    });
+  }
+  return points;
+}
+
+/** Opening hours, from the machine-readable copy in site.ts. */
+function openingHours(): Json[] {
+  return site.hoursSpec.map((row) => ({
+    "@type": "OpeningHoursSpecification",
+    dayOfWeek: row.days.map((d) => `https://schema.org/${d}`),
+    opens: row.opens,
+    closes: row.closes,
+  }));
+}
+
+/**
+ * `priceRange`, and only once someone has signed off that the prices are real.
+ *
+ * The figures come from the catalog, so the range is arithmetic rather than
+ * invention — but while `pricing` is unverified the catalog itself is a set of
+ * market-derived starting points, and a range built on those is a claim about
+ * the business that nobody has agreed to. It appears when the sign-off does.
+ */
+function priceRange(): string | null {
+  if (!verification.pricing?.verified || !packages.length) return null;
+  const low = lowestPrice();
+  const high = highestPrice();
+  return low === high ? `₹${low}` : `₹${low}–₹${high}`;
+}
+
+/** The services offered, so the entity is understood as more than a name. */
+function offerCatalog(services: Service[]): Json | null {
+  if (!services.length) return null;
+  return {
+    "@type": "OfferCatalog",
+    name: `${site.businessName} decoration services`,
+    itemListElement: services.map((service) => ({
+      "@type": "Offer",
+      itemOffered: {
+        "@type": "Service",
+        name: service.name,
+        description: service.summary,
+      },
+    })),
+  };
+}
+
 export function organizationSchema(): Json {
   const address = postalAddress();
   const phone = telephone();
   const rating = aggregateRating();
+  const contacts = contactPoints();
+  const range = priceRange();
+  const catalog = offerCatalog(services);
 
   return {
     "@context": "https://schema.org",
@@ -50,10 +128,15 @@ export function organizationSchema(): Json {
     description: site.description,
     url: siteUrl,
     ...(phone ? { telephone: phone } : {}),
-    email: site.email,
+    ...(site.email ? { email: site.email } : {}),
     ...(address ? { address } : {}),
     ...(site.logo ? { logo: absolute(site.logo) } : {}),
     ...(site.social.length ? { sameAs: site.social.map((s) => s.href) } : {}),
+    ...(contacts.length ? { contactPoint: contacts } : {}),
+    ...(site.hoursSpec.length ? { openingHoursSpecification: openingHours() } : {}),
+    ...(range ? { priceRange: range } : {}),
+    ...(catalog ? { hasOfferCatalog: catalog } : {}),
+    currenciesAccepted: site.currency,
     // Only claimed where cities.ts records a real service area.
     areaServed: areaServed(),
     ...(rating

@@ -188,6 +188,10 @@ export const copy = {
     indexTitle: "Where we set up",
     indexLead:
       "Five cities across Delhi NCR. Each page covers the access rules, travel and timing that actually apply there.",
+    /** Delhi NCR spans three states; grouping by them is how people locate
+     *  themselves, and it is the geography Google already models. */
+    stateGroupLabel: (state: string, n: number) =>
+      n === 1 ? `${state} — 1 city` : `${state} — ${n} cities`,
     localNotesTitle: (city: string) => `Booking in ${city}`,
     localitiesTitle: "Areas covered",
     travelNoteTitle: "Travel and scheduling",
@@ -213,9 +217,10 @@ export const copy = {
     formNote:
       "We reply during working hours, usually within the hour. For a booking in the next twenty-four hours, WhatsApp or call instead.",
     whatsappTitle: "WhatsApp",
-    whatsappBody: "Send a photo of the room and your date. Quickest route to a real quote.",
+    whatsappBody:
+      "WhatsApp — send a photo of the room and your date. Quickest route to a real quote.",
     callTitle: "Call",
-    callBody: "For same-day bookings and anything that needs a conversation.",
+    callBody: "Call this line for same-day bookings and anything that needs a conversation.",
     hoursTitle: "Hours",
     fields: {
       name: "Your name",
