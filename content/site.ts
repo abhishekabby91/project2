@@ -120,7 +120,12 @@ export const site: SiteConfig = {
     primaryHover: "#3D2856",
     primaryForeground: "#FDF7FB",
     secondary: "#4A4453",
-    accent: "#D6336C",
+    /* Darkened from #D6336C, which failed WCAG AA on the muted background —
+       4.32 against the 4.5 needed — on eighteen pages, everywhere a section
+       eyebrow sat on a muted band. Four points of lightness; the same pink to
+       look at. Now 4.84 on muted and 5.17 on white, and it lifts the white
+       button label from 4.62 to 5.17 as well. `npm run qa` holds this. */
+    accent: "#CC2962",
     accentHover: "#B02757",
     accentForeground: "#FFFFFF",
     background: "#FFFFFF",

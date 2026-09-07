@@ -26,21 +26,29 @@ async function sitemapPaths() {
     .filter((p, i, a) => a.indexOf(p) === i);
 }
 
-/** One representative page per template, so the suite stays fast as content grows. */
+/**
+ * One representative page per template, so the suite stays fast as content
+ * grows — derived from the sitemap rather than named.
+ *
+ * This used to be a hardcoded list of the CPA template's routes: /about,
+ * /team, /locations, /resources, /schedule. None of them exist on this site,
+ * so every one resolved to the 404 page, which passes every check trivially.
+ * The suite reported a clean run while never once loading the catalog, a
+ * package, a city or a service page. A list of route names cannot survive a
+ * fork; the shape of the URLs can.
+ *
+ * Two paths of the same shape — /balloon-decoration/noida and
+ * /anniversary-decoration/delhi — come from one template and one of them is
+ * enough. The 404 is appended deliberately: it is a template too.
+ */
 function sampleRoutes(all) {
-  const first = (prefix, depth) =>
-    all.filter((p) => p.startsWith(prefix) && p.split('/').filter(Boolean).length === depth)[0];
-  return [...new Set([
-    '/',
-    '/services', first('/services/', 2),
-    '/industries', first('/industries/', 2),
-    '/about', '/team', first('/team/', 2),
-    '/locations', first('/locations/', 2),
-    '/resources', '/resources/blog', first('/resources/blog/', 3),
-    '/resources/guides', '/faqs', '/contact', '/schedule',
-    '/privacy', '/terms', '/accessibility',
-    '/this-page-does-not-exist-404-check',
-  ].filter(Boolean))];
+  const byTemplate = new Map();
+  for (const p of all) {
+    const segments = p.split('/').filter(Boolean);
+    const key = segments.length === 0 ? '/' : `${segments[0]}|${segments.length}`;
+    if (!byTemplate.has(key)) byTemplate.set(key, p);
+  }
+  return [...byTemplate.values(), '/this-page-does-not-exist-404-check'];
 }
 
 const paths = sampleRoutes(await sitemapPaths());
