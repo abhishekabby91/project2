@@ -1,0 +1,39 @@
+{
+  "name": "happyarc",
+  "version": "1.0.0",
+  "private": true,
+  "description": "HappyArc — balloon and party decoration across Delhi NCR",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit",
+    "check:content": "node scripts/check-content.mjs",
+    "baseline": "node scripts/build-baseline.mjs",
+    "check:upstream": "node scripts/check-upstream.mjs",
+    "qa": "node scripts/qa/run.mjs"
+  },
+  "dependencies": {
+    "next": "15.5.25",
+    "react": "19.2.8",
+    "react-dom": "19.2.8"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "4.3.3",
+    "@types/node": "22.20.1",
+    "@types/react": "19.2.18",
+    "@types/react-dom": "19.2.7",
+    "tailwindcss": "4.3.3",
+    "typescript": "5.9.3"
+  },
+  "engines": {
+    "node": ">=20.9.0"
+  },
+  "overrides": {
+    "postcss": "^8.5.28"
+  },
+  "optionalDependencies": {
+    "playwright": "1.62.1"
+  }
+}
