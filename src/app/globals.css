@@ -1,0 +1,230 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------------------
+   Design tokens
+   ---------------------------------------------------------------------------
+   Colors are declared `inline` so they resolve against the CSS custom
+   properties emitted from `content/site.ts` at runtime. Changing a hex value in
+   the config restyles every utility class across the site — no rebuild of the
+   token layer required.
+--------------------------------------------------------------------------- */
+@theme inline {
+  --color-primary: var(--brand-primary);
+  --color-primary-hover: var(--brand-primary-hover);
+  --color-primary-fg: var(--brand-primary-foreground);
+  --color-secondary: var(--brand-secondary);
+  --color-accent: var(--brand-accent);
+  --color-accent-hover: var(--brand-accent-hover);
+  --color-accent-fg: var(--brand-accent-foreground);
+  --color-canvas: var(--brand-background);
+  --color-surface: var(--brand-surface);
+  --color-muted: var(--brand-muted);
+  --color-ink: var(--brand-text);
+  --color-ink-muted: var(--brand-text-muted);
+  --color-line: var(--brand-border);
+  --color-highlight: var(--brand-highlight);
+
+  --radius-brand: var(--brand-radius);
+  --radius-brand-lg: calc(var(--brand-radius) * 1.75);
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-serif: var(--font-serif-display), ui-serif, Georgia, Cambria,
+    "Times New Roman", serif;
+
+  --shadow-card: 0 1px 2px rgb(16 24 40 / 0.04), 0 1px 3px rgb(16 24 40 / 0.06);
+  --shadow-raised: 0 4px 6px -2px rgb(16 24 40 / 0.03),
+    0 12px 16px -4px rgb(16 24 40 / 0.08);
+  --shadow-float: 0 8px 8px -4px rgb(16 24 40 / 0.03),
+    0 20px 24px -4px rgb(16 24 40 / 0.1);
+
+  --animate-reveal: reveal 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Fallback values so the page renders correctly even before the config-driven
+   custom properties are applied (e.g. in a hard-failure or no-JS edge case). */
+:root {
+  --brand-primary: #2B1B3D;
+  --brand-primary-hover: #3D2856;
+  --brand-primary-foreground: #FDF7FB;
+  --brand-secondary: #4A4453;
+  --brand-accent: #D6336C;
+  --brand-accent-hover: #B02757;
+  --brand-accent-foreground: #ffffff;
+  --brand-background: #ffffff;
+  --brand-surface: #ffffff;
+  --brand-muted: #FBF6F8;
+  --brand-text: #241C2B;
+  --brand-text-muted: #6B6272;
+  --brand-border: #EFE4EA;
+  --brand-highlight: #F0A202;
+  --brand-radius: 0.875rem;
+
+  color-scheme: light;
+  scroll-behavior: smooth;
+  /* Keeps in-page anchors clear of the sticky header. */
+  scroll-padding-top: 6rem;
+}
+
+@layer base {
+  * {
+    border-color: var(--color-line);
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    background-color: var(--color-canvas);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-serif);
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    color: var(--color-primary);
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* A single, consistent focus treatment everywhere — visible on both light
+     and dark surfaces. */
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  .on-dark :focus-visible,
+  [data-surface="dark"] :focus-visible {
+    outline-color: #ffffff;
+  }
+
+  /* Native details marker removed; the FAQ accordion draws its own. */
+  summary::-webkit-details-marker {
+    display: none;
+  }
+}
+
+@layer components {
+  /* Long-form article and legal-page typography. */
+  .prose-brand {
+    color: var(--color-ink);
+    line-height: 1.75;
+  }
+  .prose-brand > * + * {
+    margin-top: 1.25rem;
+  }
+  .prose-brand h2 {
+    font-size: 1.5rem;
+    line-height: 1.3;
+    margin-top: 2.75rem;
+  }
+  .prose-brand h3 {
+    font-size: 1.175rem;
+    line-height: 1.4;
+    margin-top: 2rem;
+  }
+  .prose-brand ul {
+    list-style: none;
+    padding: 0;
+  }
+  .prose-brand ul > li {
+    position: relative;
+    padding-left: 1.6rem;
+    margin-top: 0.6rem;
+  }
+  .prose-brand ul > li::before {
+    content: "";
+    position: absolute;
+    left: 0.25rem;
+    top: 0.7em;
+    width: 0.375rem;
+    height: 0.375rem;
+    border-radius: 9999px;
+    background-color: var(--color-accent);
+  }
+  .prose-brand a {
+    color: var(--color-accent);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .prose-brand a:hover {
+    color: var(--color-accent-hover);
+  }
+  .prose-brand strong {
+    color: var(--color-primary);
+    font-weight: 600;
+  }
+}
+
+@layer utilities {
+  /* Scroll-reveal. Elements start hidden only when JS is available to reveal
+     them, so the page is fully readable without it. */
+  .js [data-reveal] {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  .js [data-reveal].is-visible {
+    animation: var(--animate-reveal);
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  /* Hairline rule used above section eyebrows. */
+  .rule-accent::before {
+    content: "";
+    display: block;
+    width: 2.5rem;
+    height: 2px;
+    background-color: var(--color-accent);
+    margin-bottom: 1rem;
+  }
+}
+
+@keyframes reveal {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    scroll-behavior: auto;
+  }
+  .js [data-reveal] {
+    opacity: 1;
+    transform: none;
+    animation: none !important;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+}
