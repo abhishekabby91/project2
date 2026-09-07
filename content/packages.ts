@@ -291,3 +291,29 @@ export const packagesInCity = (city: string) =>
 
 /** Lowest published starting price, for "from ₹X" copy. Never hardcode this. */
 export const lowestPrice = () => Math.min(...packages.map((p) => p.priceFrom));
+
+/* -------------------------------------------------------------------------- */
+/*  Browsing                                                                  */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Budget bands for the catalog filter.
+ *
+ * ⚠️  These thresholds are derived from the placeholder prices above and are a
+ * commercial decision in their own right — they are how a visitor is invited to
+ * segment the catalog, and they shape which setup a family on a fixed budget
+ * ever sees. Re-cut them when the real prices land, then sign off `pricing` in
+ * content/verification.ts.
+ *
+ * `max` is exclusive. `null` means no ceiling.
+ */
+export const budgetBands: { slug: string; label: string; min: number; max: number | null }[] = [
+  { slug: "under-2500", label: "Under ₹2,500", min: 0, max: 2500 },
+  { slug: "2500-5000", label: "₹2,500 – ₹5,000", min: 2500, max: 5000 },
+  { slug: "over-5000", label: "₹5,000 and above", min: 5000, max: null },
+];
+
+export const getBudgetBand = (slug: string) => budgetBands.find((b) => b.slug === slug);
+
+/** Highest published starting price, for "from ₹X to ₹Y" copy. */
+export const highestPrice = () => Math.max(...packages.map((p) => p.priceFrom));

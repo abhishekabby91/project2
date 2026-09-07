@@ -123,6 +123,66 @@ export const copy = {
       "Photographs of this setup are being added. Ask on WhatsApp and we will send recent ones from a booking like yours.",
   },
 
+  /**
+   * The catalog browser — filters, sort and the card preview.
+   *
+   * Competitors in this market put a photograph on every listing card. Until
+   * there are photographs of this team's own setups, the card shows the theme
+   * palettes the setup is genuinely built in. That is a real answer to "what
+   * will it look like", not a placeholder pretending to be one.
+   */
+  catalog: {
+    filtersTitle: "Narrow it down",
+    resultsHeading: "Matching setups",
+    showFilters: "Filters",
+    hideFilters: "Hide filters",
+    clear: "Clear all",
+    resultCount: (n: number) => (n === 1 ? "1 setup" : `${n} setups`),
+    activeFilterCount: (n: number) => (n === 1 ? "1 filter" : `${n} filters`),
+    sortLabel: "Sort by",
+    sortOptions: {
+      recommended: "Recommended",
+      priceAsc: "Price: low to high",
+      priceDesc: "Price: high to low",
+      name: "Name (A–Z)",
+    },
+    groups: {
+      occasion: "Occasion",
+      theme: "Theme",
+      city: "City",
+      budget: "Budget",
+      service: "Type of setup",
+    },
+    anyOption: {
+      occasion: "Any occasion",
+      theme: "Any theme",
+      city: "Anywhere in NCR",
+      budget: "Any budget",
+      service: "Any type",
+    },
+    empty: {
+      title: "Nothing matches all of those",
+      body:
+        "We build to order as often as we build from the list. Tell us the room, the date and the budget on WhatsApp and we will quote it.",
+      reset: "Clear the filters",
+    },
+    /** Shown on a card when the package has no photograph yet. */
+    palettePreviewLabel: (n: number) => (n === 1 ? "Built in 1 palette" : `Built in ${n} palettes`),
+    photosPending: "Photographs coming",
+    setupTimeShort: (time: string) => `${time} to install`,
+    cityCount: (n: number) => (n === 1 ? "1 city" : `${n} cities`),
+    allCitiesLabel: "Across all of NCR",
+    browseByBudgetEyebrow: "By budget",
+    browseByBudgetTitle: "Start from what you want to spend",
+    browseByBudgetLead:
+      "Every price below is a starting point for that setup, quoted properly once we have seen the room. Nothing is hidden behind an enquiry.",
+    budgetBandCount: (n: number) => (n === 1 ? "1 setup" : `${n} setups`),
+    seeAllSetups: "See all setups",
+    inThisTheme: (theme: string) => `See every setup in ${theme}`,
+    forThisOccasion: (occasion: string) => `See every setup for ${occasion.toLowerCase()}`,
+    inThisCity: (city: string) => `See every setup available in ${city}`,
+  },
+
   cities: {
     indexEyebrow: "Service areas",
     indexTitle: "Where we set up",

@@ -16,6 +16,7 @@ import { Cta } from "@/components/sections/Cta";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { Button } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
+import { catalogHref } from "@/lib/catalog";
 
 export const dynamicParams = false;
 
@@ -125,8 +126,13 @@ export default async function CityPage({ params }: { params: Promise<{ slug: str
           <SectionHeading title={copy.cities.packagesTitle(city.name)} id="city-pkgs" />
           <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {cityPackages.slice(0, 6).map((pkg) => (
-              <PackageCard key={pkg.slug} pkg={pkg} headingLevel={3} />
+              <PackageCard key={pkg.slug} pkg={pkg} headingLevel={3} cityCount={cities.length} />
             ))}
+          </div>
+          <div className="mt-10">
+            <Button href={catalogHref({ city: city.slug })} variant="secondary">
+              {copy.catalog.inThisCity(city.name)}
+            </Button>
           </div>
         </Section>
       ) : null}

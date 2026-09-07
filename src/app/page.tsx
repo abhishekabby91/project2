@@ -16,6 +16,7 @@ import { ServiceCard, OccasionCard, ThemeCard, PackageCard, CityCard } from "@/c
 import { Faqs } from "@/components/sections/Faqs";
 import { Process } from "@/components/sections/Process";
 import { Cta } from "@/components/sections/Cta";
+import { BudgetBands } from "@/components/sections/BudgetBands";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { faqSchema } from "@/lib/schema";
 
@@ -119,9 +120,14 @@ export default function HomePage() {
         />
         <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {featured.map((pkg) => (
-            <PackageCard key={pkg.slug} pkg={pkg} headingLevel={3} />
+            <PackageCard key={pkg.slug} pkg={pkg} headingLevel={3} cityCount={cities.length} />
           ))}
         </div>
+
+        {/* Straight after three prices, because that is the moment someone
+            wants to enter the catalog at their own number rather than ours. */}
+        <BudgetBands />
+
         <div className="mt-10">
           <Button href="/packages" variant="secondary">
             {copy.cta.viewAll} packages

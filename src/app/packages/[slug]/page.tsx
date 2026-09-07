@@ -1,9 +1,10 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { packages, getPackage } from "@/content/packages";
-import { getCity } from "@/content/cities";
+import { cities, getCity } from "@/content/cities";
 import { getService } from "@/content/services";
 import { getOccasion } from "@/content/occasions";
+import { getTheme } from "@/content/themes";
 import { copy } from "@/content/copy";
 import { site, whatsappLink, formatPrice } from "@/content/site";
 import { pageMetadata } from "@/lib/seo";
@@ -11,6 +12,8 @@ import { packageSchema } from "@/lib/schema";
 import { Section, SectionHeading } from "@/components/ui/Section";
 import { Breadcrumbs } from "@/components/layout/Breadcrumbs";
 import { CheckList, PackageCard } from "@/components/cards/Cards";
+import { PackageGallery } from "@/components/catalog/PackageGallery";
+import { PackageBookingBar } from "@/components/catalog/PackageBookingBar";
 import { Cta } from "@/components/sections/Cta";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { Button } from "@/components/ui/Button";
@@ -33,6 +36,15 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   });
 }
 
+/**
+ * One setup: what it is, what it costs, what it does not include, and every
+ * route onwards from it.
+ *
+ * The cross-links are the structural part. Someone who arrived from a theme
+ * should be able to leave towards the occasion, the city or the service without
+ * going back to the catalog first. That lattice is what the competitors in this
+ * market build, and what a flat set of product pages never has.
+ */
 export default async function PackagePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const pkg = getPackage(slug);
@@ -41,6 +53,23 @@ export default async function PackagePage({ params }: { params: Promise<{ slug: 
   const related = packages
     .filter((p) => p.slug !== pkg.slug && p.services.some((s) => pkg.services.includes(s)))
     .slice(0, 3);
+
+  const occasionLinks = pkg.occasions
+    .map((s) => getOccasion(s))
+    .filter(Boolean)
+    .map((o) => ({ slug: o!.slug, name: o!.name, href: `/occasions/${o!.slug}` }));
+  const themeLinks = pkg.themes
+    .map((s) => getTheme(s))
+    .filter(Boolean)
+    .map((t) => ({ slug: t!.slug, name: t!.name, href: `/themes/${t!.slug}` }));
+  const cityLinks = pkg.cities
+    .map((s) => getCity(s))
+    .filter(Boolean)
+    .map((c) => ({ slug: c!.slug, name: c!.name, href: `/cities/${c!.slug}` }));
+  const serviceLinks = pkg.services
+    .map((s) => getService(s))
+    .filter(Boolean)
+    .map((s) => ({ slug: s!.slug, name: s!.name, href: `/${s!.slug}` }));
 
   return (
     <>
@@ -56,26 +85,7 @@ export default async function PackagePage({ params }: { params: Promise<{ slug: 
           <div>
             <SectionHeading eyebrow="Package" title={pkg.name} lead={pkg.summary} level={1} />
 
-            {pkg.images.length ? (
-              <div className="mt-9 grid gap-3 sm:grid-cols-2">
-                {pkg.images.map((image) => (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    key={image.src}
-                    src={image.src}
-                    alt={image.alt}
-                    className="w-full rounded-brand-lg border border-line object-cover"
-                    loading="lazy"
-                  />
-                ))}
-              </div>
-            ) : (
-              /* Honest about the gap rather than filling it with stock imagery
-                 of work this team did not do. */
-              <p className="mt-9 rounded-brand-lg border border-dashed border-line bg-muted p-6 text-sm leading-relaxed text-ink-muted">
-                {copy.packages.noImagesNote}
-              </p>
-            )}
+            <PackageGallery pkg={pkg} />
 
             <div className="mt-12 grid gap-10 sm:grid-cols-2">
               <div>
@@ -105,35 +115,13 @@ export default async function PackagePage({ params }: { params: Promise<{ slug: 
                 ) : null}
               </p>
 
-              <dl className="mt-6 space-y-4 border-t border-line pt-6 text-sm">
-                <div className="flex items-start gap-3">
-                  <Icon name="clock" className="mt-0.5 h-4 w-4 shrink-0 text-accent" />
-                  <div>
-                    <dt className="font-semibold text-primary">{copy.packages.setupTimeLabel}</dt>
-                    <dd className="text-ink-muted">{pkg.setupTime}</dd>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <Icon name="pin" className="mt-0.5 h-4 w-4 shrink-0 text-accent" />
-                  <div>
-                    <dt className="font-semibold text-primary">{copy.packages.availableInTitle}</dt>
-                    <dd className="text-ink-muted">
-                      {pkg.cities.map((c) => getCity(c)?.name).filter(Boolean).join(", ")}
-                    </dd>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <Icon name="sparkle" className="mt-0.5 h-4 w-4 shrink-0 text-accent" />
-                  <div>
-                    <dt className="font-semibold text-primary">{copy.packages.goodForTitle}</dt>
-                    <dd className="text-ink-muted">
-                      {pkg.occasions.map((o) => getOccasion(o)?.name).filter(Boolean).join(", ")}
-                    </dd>
-                  </div>
-                </div>
-              </dl>
+              <p className="mt-5 flex items-center gap-2.5 border-t border-line pt-5 text-sm">
+                <Icon name="clock" className="h-4 w-4 shrink-0 text-accent" />
+                <span className="font-semibold text-primary">{copy.packages.setupTimeLabel}</span>
+                <span className="text-ink-muted">{pkg.setupTime}</span>
+              </p>
 
-              <div className="mt-7 grid gap-3">
+              <div className="mt-6 grid gap-3">
                 <Button href={whatsappLink(pkg.name)} external size="lg" data-conversion="whatsapp_click">
                   <Icon name="whatsapp" className="h-4 w-4" />
                   {copy.cta.bookThis(pkg.name)}
@@ -145,22 +133,18 @@ export default async function PackagePage({ params }: { params: Promise<{ slug: 
               </div>
             </div>
 
-            <ul className="mt-6 flex flex-wrap gap-2">
-              {pkg.services.map((s) => {
-                const service = getService(s);
-                if (!service) return null;
-                return (
-                  <li key={s}>
-                    <Link
-                      href={`/${service.slug}`}
-                      className="inline-flex rounded-full border border-line bg-surface px-3.5 py-1.5 text-sm text-ink-muted transition-colors hover:border-accent/40 hover:text-accent"
-                    >
-                      {service.name}
-                    </Link>
-                  </li>
-                );
-              })}
-            </ul>
+            {/* Every taxonomy this setup belongs to, as a way out rather than as
+                a list of words. */}
+            <div className="mt-6 space-y-6">
+              <ChipGroup title={copy.packages.goodForTitle} items={occasionLinks} />
+              <ChipGroup title={copy.catalog.groups.theme} items={themeLinks} />
+              <ChipGroup
+                title={copy.packages.availableInTitle}
+                items={cityLinks}
+                allLabel={pkg.cities.length >= cities.length ? copy.catalog.allCitiesLabel : undefined}
+              />
+              <ChipGroup title={copy.catalog.groups.service} items={serviceLinks} />
+            </div>
           </aside>
         </div>
       </Section>
@@ -170,14 +154,60 @@ export default async function PackagePage({ params }: { params: Promise<{ slug: 
           <SectionHeading title="Other setups people compare this with" id="pkg-related" />
           <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {related.map((p) => (
-              <PackageCard key={p.slug} pkg={p} headingLevel={3} />
+              <PackageCard key={p.slug} pkg={p} headingLevel={3} cityCount={cities.length} />
             ))}
+          </div>
+          <div className="mt-10">
+            <Button href="/packages" variant="secondary">
+              {copy.catalog.seeAllSetups}
+            </Button>
           </div>
         </Section>
       ) : null}
 
       <Cta context={pkg.name} />
       <JsonLd data={packageSchema(pkg)} />
+      <PackageBookingBar pkg={pkg} />
     </>
+  );
+}
+
+/**
+ * A labelled row of links out — to the occasion, the theme, the city itself.
+ * Those pages carry real content; sending someone to a pre-filtered grid
+ * instead would be the thinner destination.
+ */
+function ChipGroup({
+  title,
+  items,
+  allLabel,
+}: {
+  title: string;
+  items: { slug: string; name: string; href: string }[];
+  /** Replaces the chip list when listing every city would just say "everywhere". */
+  allLabel?: string;
+}) {
+  if (!items.length) return null;
+
+  return (
+    <div>
+      <h2 className="text-xs font-semibold uppercase tracking-[0.12em] text-ink-muted">{title}</h2>
+      {allLabel ? (
+        <p className="mt-2.5 text-sm text-ink">{allLabel}</p>
+      ) : (
+        <ul className="mt-2.5 flex flex-wrap gap-2">
+          {items.map((item) => (
+            <li key={item.slug}>
+              <Link
+                href={item.href}
+                className="inline-flex rounded-full border border-line bg-surface px-3.5 py-1.5 text-sm text-ink-muted transition-colors hover:border-accent/40 hover:text-accent"
+              >
+                {item.name}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
   );
 }

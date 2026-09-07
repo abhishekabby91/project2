@@ -17,6 +17,7 @@ import { JsonLd } from "@/components/seo/JsonLd";
 import { Button } from "@/components/ui/Button";
 import { site, whatsappLink } from "@/content/site";
 import { Icon } from "@/components/ui/Icon";
+import { catalogHref } from "@/lib/catalog";
 
 /**
  * Service hub — `/balloon-decoration`, `/birthday-decoration`, and so on.
@@ -89,8 +90,13 @@ export default async function ServicePage({ params }: { params: Promise<{ servic
           <SectionHeading title={copy.services.packagesTitle(service.name)} id="svc-packages" />
           <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {servicePackages.map((pkg) => (
-              <PackageCard key={pkg.slug} pkg={pkg} headingLevel={3} />
+              <PackageCard key={pkg.slug} pkg={pkg} headingLevel={3} cityCount={cities.length} />
             ))}
+          </div>
+          <div className="mt-10">
+            <Button href={catalogHref({ service: service.slug })} variant="secondary">
+              {copy.catalog.seeAllSetups}
+            </Button>
           </div>
         </Section>
       ) : null}

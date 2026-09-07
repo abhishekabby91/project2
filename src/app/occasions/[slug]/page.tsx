@@ -1,12 +1,15 @@
 import { notFound } from "next/navigation";
 import { occasions, getOccasion } from "@/content/occasions";
 import { packagesFor } from "@/content/packages";
+import { cities } from "@/content/cities";
 import { copy } from "@/content/copy";
 import { pageMetadata } from "@/lib/seo";
 import { Section, SectionHeading } from "@/components/ui/Section";
 import { Breadcrumbs } from "@/components/layout/Breadcrumbs";
 import { PackageCard, CheckList } from "@/components/cards/Cards";
 import { Cta } from "@/components/sections/Cta";
+import { Button } from "@/components/ui/Button";
+import { catalogHref } from "@/lib/catalog";
 
 export const dynamicParams = false;
 
@@ -60,8 +63,13 @@ export default async function OccasionPage({ params }: { params: Promise<{ slug:
           <SectionHeading title={copy.occasions.packagesTitle} id="occ-packages" />
           <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {related.map((pkg) => (
-              <PackageCard key={pkg.slug} pkg={pkg} headingLevel={3} />
+              <PackageCard key={pkg.slug} pkg={pkg} headingLevel={3} cityCount={cities.length} />
             ))}
+          </div>
+          <div className="mt-10">
+            <Button href={catalogHref({ occasion: occasion.slug })} variant="secondary">
+              {copy.catalog.forThisOccasion(occasion.name)}
+            </Button>
           </div>
         </Section>
       ) : null}

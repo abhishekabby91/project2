@@ -174,7 +174,7 @@ export default async function ServiceCityPage({
           <SectionHeading title={copy.cities.packagesTitle(city.name)} id="city-packages" />
           <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {cityPackages.map((pkg) => (
-              <PackageCard key={pkg.slug} pkg={pkg} headingLevel={3} />
+              <PackageCard key={pkg.slug} pkg={pkg} headingLevel={3} cityCount={cities.length} />
             ))}
           </div>
         </Section>

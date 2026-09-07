@@ -15,6 +15,7 @@ import { cn } from "@/lib/utils";
  */
 export function MobileCtaBar() {
   const [visible, setVisible] = useState(false);
+  const [pageCta, setPageCta] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setVisible(window.scrollY > 520);
@@ -22,6 +23,21 @@ export function MobileCtaBar() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  // A page may raise its own bar with more to say — a package page puts the
+  // price in it. Sliding this one out of view is not enough: an off-screen bar
+  // that still takes focus gives a keyboard user two bars and one of them
+  // invisible. So it comes out of the tree instead.
+  useEffect(() => {
+    const root = document.documentElement;
+    const read = () => setPageCta(root.dataset.pageCta === "true");
+    read();
+    const observer = new MutationObserver(read);
+    observer.observe(root, { attributes: true, attributeFilter: ["data-page-cta"] });
+    return () => observer.disconnect();
+  }, []);
+
+  if (pageCta) return null;
 
   return (
     <div

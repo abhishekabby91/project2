@@ -109,8 +109,13 @@ export const site: SiteConfig = {
         { label: "Birthday Decoration", href: "/birthday-decoration" },
         { label: "Anniversary Decoration", href: "/anniversary-decoration" },
         { label: "Baby Shower & Welcome Baby", href: "/baby-shower-decoration" },
+        { label: "Room Decoration", href: "/room-decoration" },
+        { label: "Event & Venue Decoration", href: "/event-decoration" },
       ],
     },
+    /* The catalog is the page that turns a visit into a booking, and the one
+       competitors put first. It belongs in the nav, not only in the footer. */
+    { label: "Packages & Prices", href: "/packages" },
     { label: "Themes", href: "/themes" },
     { label: "Occasions", href: "/occasions" },
     { label: "Cities", href: "/cities" },
