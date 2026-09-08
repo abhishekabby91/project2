@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Icon } from "@/components/ui/Icon";
-import { formatPrice } from "@/content/site";
+import { formatPrice, whatsappLink } from "@/content/site";
 import { copy } from "@/content/copy";
 import { getTheme } from "@/content/themes";
 import type { City, DecorPackage, IconName, Occasion, Service, Theme } from "@/content/types";
@@ -175,7 +175,7 @@ export function PackagePreview({
 /** Setup time and coverage — the two questions asked before the price. */
 function PackageMeta({ pkg, cityCount }: { pkg: DecorPackage; cityCount: number }) {
   return (
-    <ul className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs text-ink-muted">
+    <ul className="mb-4 mt-3 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs text-ink-muted">
       <li className="inline-flex items-center gap-1.5">
         <Icon name="clock" className="h-3.5 w-3.5 shrink-0 text-accent" />
         {pkg.setupTime}
@@ -202,19 +202,42 @@ export function PackageCard({
 }) {
   return (
     <article className={cn(cardBase, "overflow-hidden p-0")}>
-      <PackagePreview pkg={pkg} className="h-44 w-full" />
-      <div className="flex flex-1 flex-col p-6">
+      <PackagePreview pkg={pkg} className="h-40 w-full" />
+      <div className="flex flex-1 flex-col p-5">
         <CardHeading level={headingLevel}>{pkg.name}</CardHeading>
-        <p className="mt-2.5 flex-1 text-sm leading-relaxed text-ink-muted">{pkg.summary}</p>
+        {/* Clamped to two lines. A card is scanned, not read — the full
+            description is one tap away on the package page, and letting it run
+            pushed the price below the fold on a phone. */}
+        {/* line-clamp sets display:-webkit-box, which fights flex-1 on the same
+            element: the box grows, a third line renders, and the ellipsis lands
+            mid-paragraph. The clamp stays here and the growing moves to the
+            footer's mt-auto, which also lines the prices up across a row of
+            cards whose titles wrap to different heights. */}
+        <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-ink-muted">
+          {pkg.summary}
+        </p>
         <PackageMeta pkg={pkg} cityCount={cityCount} />
-        <div className="mt-5 flex items-end justify-between gap-3 border-t border-line pt-5">
+        <div className="mt-auto flex items-center justify-between gap-3 border-t border-line pt-4">
           <span className="text-sm text-ink-muted">
             <span className="block text-xs uppercase tracking-wide">{copy.packages.priceFromLabel}</span>
             <span className="text-xl font-semibold text-primary">{formatPrice(pkg.priceFrom)}</span>
           </span>
-          <span className="inline-flex items-center gap-1.5 pb-1 text-sm font-semibold text-accent">
-            Details <Chevron />
-          </span>
+          {/* The booking action sits on the card itself, the way it does on
+              every competitor's grid — someone who has decided from the price
+              alone should not have to open the page first. `relative z-10`
+              lifts it above the cover link, so the card still goes to the
+              detail page and this one button goes to WhatsApp. */}
+          <a
+            href={whatsappLink(pkg.name)}
+            data-conversion="whatsapp_click"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={copy.cta.bookNowLabel(pkg.name)}
+            className="relative z-10 inline-flex min-h-6 shrink-0 items-center gap-1.5 rounded-brand bg-accent px-3.5 py-2 text-sm font-semibold text-accent-fg transition-colors hover:bg-accent-hover"
+          >
+            <Icon name="whatsapp" className="h-3.5 w-3.5" />
+            {copy.cta.bookNow}
+          </a>
         </div>
       </div>
       <CoverLink href={`/packages/${pkg.slug}`} label={pkg.name} />

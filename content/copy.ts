@@ -22,6 +22,9 @@ export const copy = {
     getQuote: "Get a quote",
     viewAll: "View all",
     bookThis: (name: string) => `Book ${name}`,
+    /** Short enough for a card. The long form is the accessible name. */
+    bookNow: "Book now",
+    bookNowLabel: (name: string) => `Book ${name} on WhatsApp`,
     checkAvailability: "Check availability",
   },
 
