@@ -242,7 +242,7 @@ export const copy = {
       "The fastest way to a quote is WhatsApp with a photo of the space. If you would rather write it out, the form goes to the same place.",
     formTitle: "Send an enquiry",
     formNote:
-      "We reply during working hours, usually within the hour. For a booking in the next twenty-four hours, WhatsApp or call instead.",
+      "One field is required — your number. Everything else helps us quote faster but you can leave it and we will ask.",
     whatsappTitle: "WhatsApp",
     whatsappBody:
       "WhatsApp — send a photo of the room and your date. Quickest route to a real quote.",
@@ -262,14 +262,19 @@ export const copy = {
       honeypot: "Website",
       submit: "Send enquiry",
       submitting: "Sending…",
+      /** Everything past the number is optional and folded away by default. */
+      phoneHint: "The number we will reply on. WhatsApp if you have it.",
+      moreDetails: "Add details — the room, the theme, anything specific",
+      moreDetailsNote:
+        "All optional. The more you tell us now, the closer the first price is to the final one.",
+      fasterRoute: "In a hurry? WhatsApp is faster — we usually reply within the hour.",
     },
     success: "Thanks — we have your enquiry and will come back to you shortly.",
     error:
       "That did not send. Please WhatsApp or call us instead and we will take the details directly.",
     validation: {
-      name: "Please tell us your name.",
-      phone: "We need a phone number to confirm the booking.",
-      message: "A sentence or two about the space helps us quote properly.",
+      phone: "We need a number to reply on.",
+      phoneFormat: "That does not look like an Indian mobile number.",
     },
   },
 

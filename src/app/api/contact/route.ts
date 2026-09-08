@@ -79,11 +79,19 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: true, message: "Thanks — we'll be in touch." });
   }
 
+  /**
+   * The phone number is the only requirement, and it is required because it is
+   * the reply route — a submission we cannot answer is not a lead. Name and a
+   * written description used to be mandatory too; asking someone to compose a
+   * paragraph before you will accept their enquiry loses more bookings than
+   * the paragraph was ever worth. Whatever is missing gets asked on WhatsApp.
+   *
+   * Kept in step with the client, which applies the same phone rule for speed
+   * and no others.
+   */
   const invalid: string[] = [];
-  if (!submission.name) invalid.push("name");
   if (!PHONE.test(submission.phone.replace(/[\s-]/g, ""))) invalid.push("phone");
   if (submission.email && !EMAIL.test(submission.email)) invalid.push("email");
-  if (submission.message.length < 10) invalid.push("message");
 
   if (invalid.length) {
     return NextResponse.json(
@@ -114,12 +122,17 @@ export async function POST(request: Request) {
         // notification email loses the date, city and occasion.
         ...forwarded,
         ...(accessKey ? { access_key: accessKey } : {}),
-        name: submission.name,
+        // Both may now be empty, and a subject line reading "Enquiry from "
+        // helps nobody triaging an inbox. The number always exists.
+        name: submission.name || submission.phone,
         ...(submission.email ? { email: submission.email } : {}),
-        subject: `Enquiry from ${submission.name}${submission.city ? ` (${submission.city})` : ""}`,
+        subject: `Enquiry from ${submission.name || submission.phone}${
+          submission.city ? ` (${submission.city})` : ""
+        }`,
         message: [
-          submission.message,
+          submission.message || "No details given — ask on WhatsApp.",
           "",
+          `Name: ${submission.name || "Not given"}`,
           `Phone: ${submission.phone}`,
           `City: ${submission.city || "Not specified"}`,
           `Date: ${submission.date || "Not specified"}`,
