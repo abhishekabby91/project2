@@ -224,12 +224,16 @@ const MIN_LOCAL_NOTES = 2;
     const end = i + 1 < pkgBlocks.length ? pkgBlocks[i + 1].index : pkgSrc.length;
     const block = pkgSrc.slice(start, end);
 
+    /* "cities" -> "city", not "citie". The message is the whole value of this
+       check — someone reading it is mid-way through pasting a catalog in. */
+    const singular = (field) => (field.endsWith("ies") ? `${field.slice(0, -3)}y` : field.slice(0, -1));
+
     for (const [field, valid] of Object.entries(known)) {
       const list = block.match(new RegExp(`${field}:\\s*\\[([^\\]]*)\\]`))?.[1];
       if (list == null) continue;
       for (const m of list.matchAll(/"([a-z0-9-]+)"/g)) {
         if (!valid.has(m[1])) {
-          err("packages.ts", `package "${pkg}" lists ${field.slice(0, -1)} "${m[1]}", which does not exist`,
+          err("packages.ts", `package "${pkg}" lists ${singular(field)} "${m[1]}", which does not exist`,
             `line ${lineAt(pkgSrc, start)} — the page will link to a 404`);
         }
       }
