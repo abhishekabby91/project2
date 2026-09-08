@@ -183,6 +183,30 @@ export const copy = {
     inThisCity: (city: string) => `See every setup available in ${city}`,
   },
 
+  /**
+   * The home page as a shop rather than a brochure.
+   *
+   * Competitors put every category on the front page as a scrollable rail of
+   * real setups with real prices, so a visitor sees the whole range without
+   * clicking. That is the right instinct: a category card that only says
+   * "Birthday Decoration" asks someone to guess what is behind it.
+   */
+  browse: {
+    navEyebrow: "Everything we set up",
+    navTitle: "What are you decorating?",
+    navLead:
+      "Every kind of setup we do, with prices, on this page. Tap through to the ones you want the detail on.",
+    railViewAll: (name: string) => `All ${name.toLowerCase()}`,
+    railCount: (n: number) => (n === 1 ? "1 setup" : `${n} setups`),
+    scrollHint: "Scroll for more",
+    cityLinksEyebrow: "By city",
+    cityLinksTitle: "Pick a city to see what we set up there",
+    cityLinksLead:
+      "Each of these pages covers the access rules, travel and timing that actually apply in that city — not the same paragraph with a place name swapped in.",
+    cityLinkLabel: (service: string, city: string) => `${service} in ${city}`,
+    showAllCategories: "See the full catalog",
+  },
+
   cities: {
     indexEyebrow: "Service areas",
     indexTitle: "Where we set up",

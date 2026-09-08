@@ -4,7 +4,7 @@ import { copy } from "@/content/copy";
 import { services } from "@/content/services";
 import { occasions } from "@/content/occasions";
 import { themes } from "@/content/themes";
-import { packages, lowestPrice } from "@/content/packages";
+import { packages, packagesFor, lowestPrice } from "@/content/packages";
 import { cities } from "@/content/cities";
 import { homeFaqs } from "@/content/faqs";
 import { reviews } from "@/content/reviews";
@@ -12,11 +12,14 @@ import { Section, SectionHeading } from "@/components/ui/Section";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
-import { ServiceCard, OccasionCard, ThemeCard, PackageCard, CityCard } from "@/components/cards/Cards";
+import { OccasionCard, ThemeCard, PackageCard, CityCard } from "@/components/cards/Cards";
 import { Faqs } from "@/components/sections/Faqs";
 import { Process } from "@/components/sections/Process";
 import { Cta } from "@/components/sections/Cta";
 import { BudgetBands } from "@/components/sections/BudgetBands";
+import { BrowseNav } from "@/components/sections/BrowseNav";
+import { CategoryRail } from "@/components/sections/CategoryRail";
+import { CityCategoryLinks } from "@/components/sections/CityCategoryLinks";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { faqSchema } from "@/lib/schema";
 
@@ -95,22 +98,26 @@ export default function HomePage() {
         </Container>
       </section>
 
-      {/* ── Services ─────────────────────────────────────────────────────── */}
-      <Section ariaLabelledBy="services-heading">
-        <SectionHeading
-          eyebrow={copy.home.servicesEyebrow}
-          title={copy.home.servicesTitle}
-          lead={copy.home.servicesLead}
-          id="services-heading"
-        />
-        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {services.map((service) => (
-            <ServiceCard key={service.slug} service={service} headingLevel={3} />
-          ))}
-        </div>
-      </Section>
+      {/* Everything on offer, before a single scroll. */}
+      <BrowseNav />
 
-      {/* ── Packages ─────────────────────────────────────────────────────── */}
+      {/* ── One rail per category ────────────────────────────────────────── */}
+      {/* A row of real setups with real prices beats a card that only names
+          the category — someone who came to find out what a birthday costs
+          finds out here. Alternating tone keeps six rails legible as six. */}
+      {services.map((service, i) => (
+        <CategoryRail
+          key={service.slug}
+          id={`rail-${service.slug}`}
+          title={service.name}
+          href={`/${service.slug}`}
+          linkLabel={copy.browse.railViewAll(service.name)}
+          packages={packagesFor("services", service.slug)}
+          tone={i % 2 === 1 ? "muted" : "default"}
+        />
+      ))}
+
+      {/* ── Prices ───────────────────────────────────────────────────────── */}
       <Section tone="muted" ariaLabelledBy="packages-heading">
         <SectionHeading
           eyebrow={copy.home.packagesEyebrow}
@@ -181,6 +188,8 @@ export default function HomePage() {
           ))}
         </div>
       </Section>
+
+      <CityCategoryLinks />
 
       {/* Reviews render only when there are real ones. See content/reviews.ts. */}
       {reviews.length ? (
