@@ -26,14 +26,14 @@ export function Footer() {
                 data-conversion="whatsapp_click"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 font-semibold text-primary-fg underline-offset-4 hover:underline"
+                className="inline-flex min-h-6 items-center gap-2 font-semibold text-primary-fg underline-offset-4 hover:underline"
               >
                 <Icon name="whatsapp" className="h-4 w-4" />
                 {copy.cta.whatsapp}
               </a>
               <a
                 href={`tel:${site.phoneHref}`}
-                className="flex items-center gap-2 text-white/80 hover:text-primary-fg"
+                className="inline-flex min-h-6 items-center gap-2 text-white/80 hover:text-primary-fg"
               >
                 <Icon name="phone" className="h-4 w-4" />
                 {site.phone}
@@ -41,7 +41,7 @@ export function Footer() {
               {site.email ? (
                 <a
                   href={`mailto:${site.email}`}
-                  className="flex items-center gap-2 text-white/80 hover:text-primary-fg"
+                  className="inline-flex min-h-6 items-center gap-2 text-white/80 hover:text-primary-fg"
                 >
                   <Icon name="mail" className="h-4 w-4" />
                   {site.email}
@@ -57,7 +57,7 @@ export function Footer() {
             <ul className="mt-4 space-y-2.5 text-sm">
               {services.map((service) => (
                 <li key={service.slug}>
-                  <Link href={`/${service.slug}`} className="text-white/80 transition-colors hover:text-primary-fg">
+                  <Link href={`/${service.slug}`} className="inline-flex min-h-6 items-center text-white/80 transition-colors hover:text-primary-fg">
                     {service.name}
                   </Link>
                 </li>
@@ -72,7 +72,7 @@ export function Footer() {
             <ul className="mt-4 space-y-2.5 text-sm">
               {cities.map((city) => (
                 <li key={city.slug}>
-                  <Link href={`/balloon-decoration/${city.slug}`} className="text-white/80 transition-colors hover:text-primary-fg">
+                  <Link href={`/balloon-decoration/${city.slug}`} className="inline-flex min-h-6 items-center text-white/80 transition-colors hover:text-primary-fg">
                     Balloon decoration in {city.name}
                   </Link>
                 </li>
@@ -85,21 +85,21 @@ export function Footer() {
               {copy.footer.companyTitle}
             </h2>
             <ul className="mt-4 space-y-2.5 text-sm">
-              <li><Link href="/occasions" className="text-white/80 hover:text-primary-fg">Occasions</Link></li>
-              <li><Link href="/themes" className="text-white/80 hover:text-primary-fg">Themes</Link></li>
-              <li><Link href="/packages" className="text-white/80 hover:text-primary-fg">Packages &amp; prices</Link></li>
-              <li><Link href="/gallery" className="text-white/80 hover:text-primary-fg">Gallery</Link></li>
-              <li><Link href="/faqs" className="text-white/80 hover:text-primary-fg">FAQs</Link></li>
-              <li><Link href="/contact" className="text-white/80 hover:text-primary-fg">Contact</Link></li>
+              <li><Link href="/occasions" className="inline-flex min-h-6 items-center text-white/80 hover:text-primary-fg">Occasions</Link></li>
+              <li><Link href="/themes" className="inline-flex min-h-6 items-center text-white/80 hover:text-primary-fg">Themes</Link></li>
+              <li><Link href="/packages" className="inline-flex min-h-6 items-center text-white/80 hover:text-primary-fg">Packages &amp; prices</Link></li>
+              <li><Link href="/gallery" className="inline-flex min-h-6 items-center text-white/80 hover:text-primary-fg">Gallery</Link></li>
+              <li><Link href="/faqs" className="inline-flex min-h-6 items-center text-white/80 hover:text-primary-fg">FAQs</Link></li>
+              <li><Link href="/contact" className="inline-flex min-h-6 items-center text-white/80 hover:text-primary-fg">Contact</Link></li>
             </ul>
 
             <h2 className="mt-8 text-sm font-semibold uppercase tracking-[0.12em] text-white/60">
               {copy.footer.legalTitle}
             </h2>
             <ul className="mt-4 space-y-2.5 text-sm">
-              <li><Link href="/privacy" className="text-white/80 hover:text-primary-fg">Privacy policy</Link></li>
-              <li><Link href="/terms" className="text-white/80 hover:text-primary-fg">Terms</Link></li>
-              <li><CookiePreferencesLink className="text-white/80 underline-offset-4 hover:text-primary-fg hover:underline" /></li>
+              <li><Link href="/privacy" className="inline-flex min-h-6 items-center text-white/80 hover:text-primary-fg">Privacy policy</Link></li>
+              <li><Link href="/terms" className="inline-flex min-h-6 items-center text-white/80 hover:text-primary-fg">Terms</Link></li>
+              <li><CookiePreferencesLink className="inline-flex min-h-6 items-center text-white/80 underline-offset-4 hover:text-primary-fg hover:underline" /></li>
             </ul>
           </div>
         </div>

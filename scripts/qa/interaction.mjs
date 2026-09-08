@@ -70,7 +70,31 @@ const sample = samplePerTemplate(uniquePaths);
 const robotsTxt = await fetch(`${BASE}/robots.txt`).then((r) => (r.ok ? r.text() : ""));
 check(robotsTxt.length > 0, "robots.txt is served");
 
-const siteIsIndexable = !/^\s*Disallow:\s*\/\s*$/im.test(robotsTxt);
+/**
+ * Indexable means *the wildcard group* allows crawling — not that the file
+ * contains no "Disallow: /" anywhere. Once content/crawlers.ts started
+ * refusing the bulk AI harvesters, a naive search found their blocks and
+ * concluded the site was closed to everyone, which silently skipped the
+ * noindex contradiction check on exactly the deployments that need it.
+ *
+ * So: read the `User-Agent: *` group only, ending at the next group.
+ */
+function wildcardGroupBlocksEverything(txt) {
+  const lines = txt.split(/\r?\n/);
+  let inWildcard = false;
+  for (const line of lines) {
+    const ua = line.match(/^\s*User-agent:\s*(.+?)\s*$/i);
+    if (ua) {
+      inWildcard = ua[1] === "*";
+      continue;
+    }
+    if (!inWildcard) continue;
+    if (/^\s*Disallow:\s*\/\s*$/i.test(line)) return true;
+  }
+  return false;
+}
+
+const siteIsIndexable = !wildcardGroupBlocksEverything(robotsTxt);
 
 if (siteIsIndexable) {
   check(/Sitemap:\s*https?:\/\//i.test(robotsTxt), "robots.txt declares the sitemap");
@@ -357,7 +381,7 @@ const ctx = await browser.newContext({ viewport: { width: 1440, height: 1000 } }
 const page = await ctx.newPage();
 
 await page.goto(`${BASE}/`, { waitUntil: "networkidle" });
-await page.getByRole("button", { name: /reject/i }).click().catch(() => {});
+await page.getByRole("button", { name: /reject/i }).click({ timeout: 2000 }).catch(() => {});
 
 // The skip link is the first thing a keyboard user meets.
 await page.keyboard.press("Tab");

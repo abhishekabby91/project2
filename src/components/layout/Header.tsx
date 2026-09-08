@@ -97,7 +97,7 @@ export function Header() {
                         aria-expanded={open}
                         onClick={() => setOpenMenu(open ? null : item.label)}
                         className={cn(
-                          "inline-flex items-center gap-1.5 rounded-brand px-3 py-2 text-[0.9375rem] font-medium transition-colors",
+                          "inline-flex items-center gap-1.5 rounded-brand px-2 py-2 text-[0.9375rem] font-medium transition-colors xl:px-3",
                           isActive(item.href) ? "text-accent" : "text-primary hover:text-accent",
                         )}
                       >
@@ -117,7 +117,7 @@ export function Header() {
                       <Link
                         href={item.href}
                         className={cn(
-                          "inline-flex rounded-brand px-3 py-2 text-[0.9375rem] font-medium transition-colors",
+                          "inline-flex rounded-brand px-2 py-2 text-[0.9375rem] font-medium transition-colors xl:px-3",
                           isActive(item.href) ? "text-accent" : "text-primary hover:text-accent",
                         )}
                       >
@@ -145,13 +145,19 @@ export function Header() {
             </ul>
           </nav>
 
+          {/* The desktop bar turns on at lg (1024px), which is exactly an iPad
+              Pro 12.9 in portrait — and logo plus seven nav items plus both
+              calls to action did not fit, overflowing the page by 64px on every
+              route. The number drops to its icon between lg and xl so the row
+              fits; the aria-label keeps it announced either way. */}
           <div className="hidden items-center gap-2 lg:flex">
             <a
               href={`tel:${site.phoneHref}`}
-              className="inline-flex items-center gap-2 rounded-brand px-3 py-2 text-sm font-semibold text-primary transition-colors hover:text-accent"
+              aria-label={`${copy.cta.call} ${site.phone}`}
+              className="inline-flex items-center gap-2 rounded-brand px-2 py-2 text-sm font-semibold text-primary transition-colors hover:text-accent xl:px-3"
             >
               <Icon name="phone" className="h-4 w-4" />
-              {site.phone}
+              <span className="hidden xl:inline">{site.phone}</span>
             </a>
             <Button href={whatsappLink()} external data-conversion="whatsapp_click">
               <Icon name="whatsapp" className="h-4 w-4" />

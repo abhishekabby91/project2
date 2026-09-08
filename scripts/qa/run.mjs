@@ -13,7 +13,8 @@
  * ship one.
  *
  * Covers accessibility (WCAG 2.2 AA contrast, heading order, labels, landmarks),
- * mobile layout, keyboard and interaction behaviour, form validation end to end,
+ * responsive layout on real phone and iPad viewports, keyboard and interaction
+ * behaviour, form validation end to end,
  * the SEO artifacts — sitemap, robots, canonical, JSON-LD validity — and cookie
  * consent, including that nothing is measured before the visitor agrees.
  *
@@ -62,9 +63,11 @@ console.log("\n## Accessibility and contrast\n");
 const a11y = await run("accessibility.mjs");
 console.log("\n## Interaction, forms and SEO\n");
 const interaction = await run("interaction.mjs");
+console.log("\n## Responsive layout — phones and iPads\n");
+const responsive = await run("responsive.mjs");
 console.log("\n## Cookie consent\n");
 const consent = await run("consent.mjs");
 
-const failed = a11y !== 0 || interaction !== 0 || consent !== 0;
+const failed = a11y !== 0 || interaction !== 0 || responsive !== 0 || consent !== 0;
 console.log(`\n${"=".repeat(60)}\n${failed ? "QA FAILED" : "QA passed"}\n`);
 process.exit(failed ? 1 : 0);

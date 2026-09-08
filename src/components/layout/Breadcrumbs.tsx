@@ -25,14 +25,16 @@ export function Breadcrumbs({ items }: { items: Crumb[] }) {
               return (
                 <li key={crumb.href} className="flex items-center gap-2">
                   {isLast ? (
-                    <span aria-current="page" className="font-medium text-primary">
+                    <span aria-current="page" className="inline-flex min-h-6 items-center font-medium text-primary">
                       {crumb.name}
                     </span>
                   ) : (
                     <>
+                      {/* min-h-6 is WCAG 2.2 AA 2.5.8: a standalone navigation
+                          target needs 24x24 CSS px. Text alone gave 20. */}
                       <Link
                         href={crumb.href}
-                        className="transition-colors hover:text-accent hover:underline"
+                        className="inline-flex min-h-6 items-center transition-colors hover:text-accent hover:underline"
                       >
                         {crumb.name}
                       </Link>
