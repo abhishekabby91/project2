@@ -338,6 +338,25 @@ if (!existsSync(baselinePath)) {
   }
 }
 
+/* ── 7. The enquiry form needs somewhere to deliver to ───────────────────── */
+
+/**
+ * A warning rather than an error, because this script cannot see the truth: the
+ * variable lives in the hosting platform, not in the shell someone runs
+ * `npm run check:content` in, so failing on it would cry wolf at every
+ * developer on a correctly configured site — and a check people learn to ignore
+ * is worse than no check.
+ *
+ * The endpoint itself refuses an enquiry it cannot deliver, so an unset webhook
+ * costs a visitor a form submission and not a booking. This line exists so the
+ * conversation happens before that, not after.
+ */
+if (!process.env.CONTACT_FORM_WEBHOOK_URL) {
+  warn("src/app/api/contact", "no CONTACT_FORM_WEBHOOK_URL in this environment",
+    "set it on the host (and CONTACT_FORM_ACCESS_KEY for a form service) — until then " +
+      "the form tells visitors to WhatsApp or call instead, which is honest but is not a form");
+}
+
 /* ── 7. Agency documents must not ship to a client ───────────────────────── */
 
 if (existsSync(join(root, "docs", "agency"))) {
