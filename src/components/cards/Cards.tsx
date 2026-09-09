@@ -90,14 +90,14 @@ export function ThemeCard({ theme, headingLevel = 3 }: { theme: Theme; headingLe
     <article className={cn(cardBase, "overflow-hidden p-0")}>
       <div aria-hidden="true" className="flex h-28 w-full">
         {theme.palette.map((hex) => (
-          <span key={hex} className="flex-1" style={{ backgroundColor: hex }} />
+          <span key={hex} className="flex-1 shadow-[inset_0_0_0_1px_rgba(0,0,0,0.07)]" style={{ backgroundColor: hex }} />
         ))}
       </div>
       <div className="flex flex-1 flex-col p-6">
         <CardHeading level={headingLevel}>{theme.name}</CardHeading>
         <p className="mt-2.5 flex-1 text-sm leading-relaxed text-ink-muted">{theme.summary}</p>
         <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-accent">
-          {copy.cta.viewAll} <Chevron />
+          {copy.cta.seeThisTheme} <Chevron />
         </span>
       </div>
       <CoverLink href={`/themes/${theme.slug}`} label={theme.name} />
@@ -160,7 +160,7 @@ export function PackagePreview({
         {shown.map((theme) => (
           <span key={theme.slug} className="flex flex-1">
             {theme.palette.map((hex) => (
-              <span key={hex} className="flex-1" style={{ backgroundColor: hex }} />
+              <span key={hex} className="flex-1 shadow-[inset_0_0_0_1px_rgba(0,0,0,0.07)]" style={{ backgroundColor: hex }} />
             ))}
           </span>
         ))}

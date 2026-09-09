@@ -34,7 +34,7 @@ export function BudgetBands({ headingLevel = 3 }: { headingLevel?: 2 | 3 }) {
   const Heading = `h${headingLevel}` as "h2" | "h3";
 
   return (
-    <div className="mt-14 border-t border-line pt-12">
+    <div className="mt-10">
       <Heading className="text-[1.375rem] leading-snug sm:text-2xl">
         {copy.catalog.browseByBudgetTitle}
       </Heading>

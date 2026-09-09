@@ -59,7 +59,7 @@ export default async function ThemePage({ params }: { params: Promise<{ slug: st
             <ul className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
               {theme.palette.map((hex) => (
                 <li key={hex} className="overflow-hidden rounded-brand border border-line">
-                  <span aria-hidden="true" className="block h-24 w-full" style={{ backgroundColor: hex }} />
+                  <span aria-hidden="true" className="block h-24 w-full shadow-[inset_0_0_0_1px_rgba(0,0,0,0.07)]" style={{ backgroundColor: hex }} />
                   <span className="block bg-surface px-3 py-2 font-mono text-xs uppercase text-ink-muted">
                     {hex}
                   </span>

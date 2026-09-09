@@ -26,6 +26,9 @@ export const copy = {
     bookNow: "Book now",
     bookNowLabel: (name: string) => `Book ${name} on WhatsApp`,
     checkAvailability: "Check availability",
+    /** On a theme card. "View all" repeated ten times down a rail says nothing
+     *  about where the link goes. */
+    seeThisTheme: "See the palette",
   },
 
   home: {

@@ -4,7 +4,7 @@ import { copy } from "@/content/copy";
 import { services } from "@/content/services";
 import { occasions } from "@/content/occasions";
 import { themes } from "@/content/themes";
-import { packages, packagesFor, lowestPrice } from "@/content/packages";
+import { packagesFor, lowestPrice } from "@/content/packages";
 import { cities } from "@/content/cities";
 import { homeFaqs } from "@/content/faqs";
 import { reviews } from "@/content/reviews";
@@ -12,20 +12,19 @@ import { Section, SectionHeading } from "@/components/ui/Section";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
-import { OccasionCard, ThemeCard, PackageCard, CityCard } from "@/components/cards/Cards";
+import { OccasionCard, ThemeCard, CityCard } from "@/components/cards/Cards";
 import { Faqs } from "@/components/sections/Faqs";
 import { Process } from "@/components/sections/Process";
 import { Cta } from "@/components/sections/Cta";
 import { BudgetBands } from "@/components/sections/BudgetBands";
 import { BrowseNav } from "@/components/sections/BrowseNav";
 import { CategoryRail } from "@/components/sections/CategoryRail";
+import { Rail } from "@/components/sections/Rail";
 import { CityCategoryLinks } from "@/components/sections/CityCategoryLinks";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { faqSchema } from "@/lib/schema";
 
 export default function HomePage() {
-  const featured = packages.filter((p) => p.featured);
-
   return (
     <>
       {/* ── Hero ─────────────────────────────────────────────────────────── */}
@@ -38,7 +37,7 @@ export default function HomePage() {
         </div>
 
         <Container size="wide" className="relative">
-          <div className="grid items-center gap-12 py-20 lg:grid-cols-[1.15fr_1fr] lg:py-28">
+          <div className="grid items-center gap-12 py-16 lg:grid-cols-[1.15fr_1fr] lg:py-20">
             <div>
               <p className="rule-accent text-xs font-semibold uppercase tracking-[0.14em] text-white/70">
                 {copy.home.heroEyebrow}
@@ -133,15 +132,13 @@ export default function HomePage() {
           lead={copy.home.packagesLead}
           id="packages-heading"
         />
-        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {featured.map((pkg) => (
-            <PackageCard key={pkg.slug} pkg={pkg} headingLevel={3} cityCount={cities.length} />
-          ))}
-        </div>
-
-        {/* Straight after three prices, because that is the moment someone
-            wants to enter the catalog at their own number rather than ours. */}
-        <BudgetBands />
+        {/* The three featured cards that used to sit here were all in the rails
+            above — the rails superseded them the day they were added, and a
+            visitor scrolling past the same balloon arch a fourth time learns
+            nothing. What is left is the part the rails do not carry: entry by
+            budget, for the person who arrives with a number rather than an
+            occasion. */}
+        <BudgetBands headingLevel={2} />
 
         <div className="mt-10">
           <Button href="/packages" variant="secondary">
@@ -151,34 +148,29 @@ export default function HomePage() {
       </Section>
 
       {/* ── Occasions ────────────────────────────────────────────────────── */}
-      <Section ariaLabelledBy="occasions-heading">
-        <SectionHeading
-          eyebrow={copy.home.occasionsEyebrow}
-          title={copy.home.occasionsTitle}
-          lead={copy.home.occasionsLead}
-          id="occasions-heading"
-        />
-        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {occasions.map((occasion) => (
-            <OccasionCard key={occasion.slug} occasion={occasion} headingLevel={3} />
-          ))}
-        </div>
-      </Section>
+      <Rail
+        id="occasions-heading"
+        title={copy.home.occasionsTitle}
+        href="/occasions"
+        linkLabel={copy.cta.viewAll}
+        items={occasions.map((occasion) => ({
+          key: occasion.slug,
+          content: <OccasionCard occasion={occasion} headingLevel={3} />,
+        }))}
+      />
 
       {/* ── Themes ───────────────────────────────────────────────────────── */}
-      <Section tone="muted" ariaLabelledBy="themes-heading">
-        <SectionHeading
-          eyebrow={copy.home.themesEyebrow}
-          title={copy.home.themesTitle}
-          lead={copy.home.themesLead}
-          id="themes-heading"
-        />
-        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {themes.map((theme) => (
-            <ThemeCard key={theme.slug} theme={theme} headingLevel={3} />
-          ))}
-        </div>
-      </Section>
+      <Rail
+        id="themes-heading"
+        title={copy.home.themesTitle}
+        href="/themes"
+        linkLabel={copy.cta.viewAll}
+        tone="muted"
+        items={themes.map((theme) => ({
+          key: theme.slug,
+          content: <ThemeCard theme={theme} headingLevel={3} />,
+        }))}
+      />
 
       <Process />
 
