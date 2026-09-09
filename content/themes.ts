@@ -26,6 +26,7 @@ export const themes: Theme[] = [
     palette: ["#C9A7EB", "#A8E6CF", "#FFD3E0", "#FFF3B0"],
     packages: ["kids-theme-room", "classic-balloon-arch", "photo-corner-backdrop"],
     seo: {
+      h1: "Unicorn & Pastel Theme Decoration",
       title: "Unicorn & Pastel Theme Decoration in Delhi NCR",
       description:
         "Unicorn and pastel theme decoration across Delhi NCR — lilac, mint and blush balloon arches and backdrops set up at home.",
@@ -40,6 +41,7 @@ export const themes: Theme[] = [
     palette: ["#2F5D3A", "#7FA650", "#C7A16B", "#E8DCC0"],
     packages: ["kids-theme-room", "ceiling-balloon-canopy", "classic-balloon-arch"],
     seo: {
+      h1: "Jungle Safari Theme Decoration",
       title: "Jungle Safari Theme Decoration in Delhi NCR",
       description:
         "Jungle and safari theme birthday decoration across Delhi NCR — green foliage arches, animal figures and full-room setups at home.",
@@ -54,6 +56,7 @@ export const themes: Theme[] = [
     palette: ["#141B41", "#3B3B8F", "#8A7CFF", "#E5C05C"],
     packages: ["kids-theme-room", "ceiling-balloon-canopy"],
     seo: {
+      h1: "Space & Galaxy Theme Decoration",
       title: "Space & Galaxy Theme Decoration in Delhi NCR",
       description:
         "Space and galaxy theme party decoration across Delhi NCR — navy and metallic balloon setups with lit elements, best suited to evening parties.",
@@ -68,6 +71,7 @@ export const themes: Theme[] = [
     palette: ["#F4B8C8", "#E8C86A", "#FFFFFF", "#B07AA1"],
     packages: ["kids-theme-room", "photo-corner-backdrop"],
     seo: {
+      h1: "Princess & Fairytale Theme Decoration",
       title: "Princess & Fairytale Theme Decoration in Delhi NCR",
       description:
         "Princess and fairytale theme decoration across Delhi NCR — pink and gold drapes, backdrop frames and balloon work set up at home.",
@@ -82,6 +86,7 @@ export const themes: Theme[] = [
     palette: ["#D62828", "#1D4E89", "#F7C331", "#1B1B1B"],
     packages: ["kids-theme-room", "classic-balloon-arch"],
     seo: {
+      h1: "Superhero & Comic Theme Decoration",
       title: "Superhero Theme Party Decoration in Delhi NCR",
       description:
         "Superhero and comic theme birthday decoration across Delhi NCR — bold primary colour balloon setups and graphic backdrops at home.",
@@ -96,6 +101,7 @@ export const themes: Theme[] = [
     palette: ["#3AA6B9", "#FF8360", "#EAD7A1", "#1F6F78"],
     packages: ["kids-theme-room", "ceiling-balloon-canopy"],
     seo: {
+      h1: "Under the Sea Theme Decoration",
       title: "Under the Sea Theme Decoration in Delhi NCR",
       description:
         "Under-the-sea and mermaid theme party decoration across Delhi NCR — aqua and coral balloon setups that photograph well in daylight.",
@@ -110,6 +116,7 @@ export const themes: Theme[] = [
     palette: ["#6B7A3A", "#A8562C", "#8C8577", "#E4DCC6"],
     packages: ["kids-theme-room", "classic-balloon-arch"],
     seo: {
+      h1: "Dinosaur Theme Decoration",
       title: "Dinosaur Theme Birthday Decoration in Delhi NCR",
       description:
         "Dinosaur theme birthday decoration across Delhi NCR — sculptural balloon work in olive, rust and stone, set up at home.",
@@ -124,6 +131,7 @@ export const themes: Theme[] = [
     palette: ["#A4133C", "#FFFFFF", "#FFB3C1", "#E8C07D"],
     packages: ["romantic-room-setup", "terrace-candlelight"],
     seo: {
+      h1: "Romantic Red & White Theme Decoration",
       title: "Romantic Red & White Decoration in Delhi NCR",
       description:
         "Romantic red and white room decoration across Delhi NCR — anniversary and proposal setups with warm lighting, installed before your reveal.",
@@ -138,6 +146,7 @@ export const themes: Theme[] = [
     palette: ["#D9C3A9", "#B85C38", "#F3EDE4", "#8A7A62"],
     packages: ["baby-shower-setup", "photo-corner-backdrop", "classic-balloon-arch"],
     seo: {
+      h1: "Boho Neutral Theme Decoration",
       title: "Boho Neutral Theme Decoration in Delhi NCR",
       description:
         "Boho and neutral theme decoration across Delhi NCR — sand, terracotta and dried floral setups for baby showers and adult celebrations.",
@@ -152,6 +161,7 @@ export const themes: Theme[] = [
     palette: ["#111111", "#D4AF37", "#C0C0C0", "#F5F0E1"],
     packages: ["classic-balloon-arch", "ceiling-balloon-canopy", "photo-corner-backdrop"],
     seo: {
+      h1: "Gold & Black Theme Decoration",
       title: "Gold & Black Theme Party Decoration in Delhi NCR",
       description:
         "Gold and black theme decoration across Delhi NCR — milestone birthdays and evening events, with a single lit focal point.",

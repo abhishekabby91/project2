@@ -63,13 +63,21 @@ export default function HomePage() {
                 </Button>
               </div>
 
+              {/* Placeholder trust points are scaffolding, not content. Reviews
+                  hide while the array is empty, the email hides while it is
+                  null, images hide until there are photographs — these follow
+                  the same rule rather than printing "PLACEHOLDER" four times
+                  in the hero of a live site. Replace them in content/site.ts
+                  with figures the business can substantiate and they return. */}
               <ul className="mt-10 grid gap-x-6 gap-y-3 sm:grid-cols-2">
-                {site.trustPoints.map((point) => (
-                  <li key={point.label} className="flex items-center gap-2.5 text-sm text-white/75">
-                    <Icon name={point.icon} className="h-4 w-4 shrink-0 text-highlight" />
-                    {point.label}
-                  </li>
-                ))}
+                {site.trustPoints
+                  .filter((point) => !/PLACEHOLDER/i.test(point.label))
+                  .map((point) => (
+                    <li key={point.label} className="flex items-center gap-2.5 text-sm text-white/75">
+                      <Icon name={point.icon} className="h-4 w-4 shrink-0 text-highlight" />
+                      {point.label}
+                    </li>
+                  ))}
               </ul>
             </div>
 

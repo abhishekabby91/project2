@@ -119,7 +119,7 @@ export function ConsentManager() {
         >
           <div className="mx-auto flex max-w-6xl flex-col gap-4 px-5 py-5 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:gap-8 lg:px-8">
             <div className="max-w-2xl">
-              <p className="font-serif text-base font-semibold text-primary">
+              <p className="font-heading text-base font-semibold text-primary">
                 {consentConfig.banner.title}
               </p>
               <p className="mt-1.5 text-sm leading-relaxed text-ink-muted">
@@ -185,7 +185,7 @@ export function ConsentManager() {
                       <div>
                         <label
                           htmlFor={`consent-${category.id}`}
-                          className="font-serif text-base font-semibold text-primary"
+                          className="font-heading text-base font-semibold text-primary"
                         >
                           {category.label}
                         </label>

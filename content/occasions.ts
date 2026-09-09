@@ -22,6 +22,7 @@ export const occasions: Occasion[] = [
     ],
     packages: ["classic-balloon-arch", "kids-theme-room", "photo-corner-backdrop"],
     seo: {
+      h1: "First Birthday Decoration at Home",
       title: "First Birthday Decoration at Home in Delhi NCR",
       description:
         "First birthday decoration across Delhi NCR — cake-smash corners, photo backdrops and child-safe setups, finished before your guests arrive.",
@@ -42,6 +43,7 @@ export const occasions: Occasion[] = [
     ],
     packages: ["kids-theme-room", "classic-balloon-arch", "photo-corner-backdrop"],
     seo: {
+      h1: "Kids\u2019 Birthday Decoration at Home",
       title: "Kids' Birthday Decoration at Home in Delhi NCR",
       description:
         "Themed kids' birthday decoration across Delhi, Gurugram, Noida and Faridabad — built sturdy, sized to your room, set up by our own team.",
@@ -62,6 +64,7 @@ export const occasions: Occasion[] = [
     ],
     packages: ["classic-balloon-arch", "photo-corner-backdrop", "ceiling-balloon-canopy"],
     seo: {
+      h1: "Milestone Birthday Decoration",
       title: "Milestone Birthday Decoration in Delhi NCR",
       description:
         "18th, 25th, 50th and other milestone birthday decoration across Delhi NCR — a photo wall, lighting and lettering, without filling the room.",
@@ -82,6 +85,7 @@ export const occasions: Occasion[] = [
     ],
     packages: ["romantic-room-setup", "terrace-candlelight"],
     seo: {
+      h1: "Anniversary Decoration at Home",
       title: "Anniversary Surprise Decoration in Delhi NCR",
       description:
         "Surprise anniversary decoration at home across Delhi NCR — room, terrace and candlelight setups timed to your reveal and cleared before it.",
@@ -102,6 +106,7 @@ export const occasions: Occasion[] = [
     ],
     packages: ["baby-shower-setup", "photo-corner-backdrop"],
     seo: {
+      h1: "Baby Shower & Godh Bharai Decoration",
       title: "Baby Shower & Godh Bharai Decoration in Delhi NCR",
       description:
         "Baby shower and godh bharai decoration across Delhi NCR — seating and comfort planned first, traditional or contemporary styling as you prefer.",
@@ -122,6 +127,7 @@ export const occasions: Occasion[] = [
     ],
     packages: ["welcome-home-baby", "classic-balloon-arch"],
     seo: {
+      h1: "Welcome Home Baby Decoration",
       title: "Welcome Home Baby Decoration in Delhi NCR",
       description:
         "Welcome-home-baby decoration across Delhi NCR — quiet, fast, low-fragrance setups at the entrance and nursery, timed to a hospital discharge.",
@@ -142,6 +148,7 @@ export const occasions: Occasion[] = [
     ],
     packages: ["romantic-room-setup", "terrace-candlelight"],
     seo: {
+      h1: "Surprise & Proposal Decoration",
       title: "Proposal & Surprise Decoration in Delhi NCR",
       description:
         "Proposal and surprise decoration across Delhi NCR — room and terrace setups planned to a fixed reveal, with a weather fallback and a backup plan.",

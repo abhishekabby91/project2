@@ -44,7 +44,7 @@ export const cities: City[] = [
       "Helium cylinders cannot be taken into some Metro-adjacent commercial buildings without prior clearance from facility management. Tell us if the venue is an office and we will arrange it.",
     ],
     seo: {
-      title: "Balloon Decoration in Delhi — Same-Day Home Setup",
+      title: "Party Decoration in Delhi — Same-Day Home Setup",
       description:
         "Balloon and party decoration at home in Delhi. Birthdays, anniversaries and baby showers set up by our own team across Dwarka, Rohini, Saket and Mayur Vihar.",
     },
@@ -73,7 +73,7 @@ export const cities: City[] = [
       "Weekday evening traffic on Golf Course Road and NH-48 pushes arrival times out. For a 7 PM reveal on a weekday we start setup at 4 PM.",
     ],
     seo: {
-      title: "Balloon Decoration in Gurugram — Home & Society Setups",
+      title: "Party Decoration in Gurugram & Gurgaon Societies",
       description:
         "Balloon and party decoration in Gurugram (Gurgaon). Birthday, anniversary and baby shower setups across DLF, Golf Course Road, Sohna Road and New Gurugram.",
     },
@@ -100,7 +100,7 @@ export const cities: City[] = [
       "Cake and flowers are sourced locally in Noida rather than carried from Delhi, so a same-day add-on is realistic here in a way it is not for every part of NCR.",
     ],
     seo: {
-      title: "Balloon Decoration in Noida — Sector-Wise Home Setup",
+      title: "Party Decoration in Noida — Sector-Wise Home Setup",
       description:
         "Balloon and party decoration in Noida. Birthday, anniversary and welcome-baby setups across Sector 18, 50, 62, 137 and Noida Extension, installed by our own team.",
     },
@@ -127,7 +127,7 @@ export const cities: City[] = [
       "Because the drive is long, we carry spare balloons and a backup pump on every Greater Noida job rather than returning for them.",
     ],
     seo: {
-      title: "Balloon Decoration in Greater Noida — Home Setup",
+      title: "Party Decoration in Greater Noida & Gaur City",
       description:
         "Balloon and party decoration in Greater Noida and Greater Noida West. Birthday and anniversary setups across Alpha, Beta, Gamma, Pari Chowk and Gaur City.",
     },
@@ -153,7 +153,7 @@ export const cities: City[] = [
       "Rooftop setups are common in the older sectors. Wind is the deciding factor — we bring weighted bases and will move a fragile centrepiece indoors rather than watch it come apart.",
     ],
     seo: {
-      title: "Balloon Decoration in Faridabad — Home Setup",
+      title: "Party Decoration in Faridabad & Neharpar",
       description:
         "Balloon and party decoration in Faridabad. Birthday, anniversary and baby shower setups across Sector 15, 21, NIT and Greater Faridabad, installed by our own team.",
     },

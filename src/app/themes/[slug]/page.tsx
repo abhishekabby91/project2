@@ -44,7 +44,12 @@ export default async function ThemePage({ params }: { params: Promise<{ slug: st
         ]}
       />
       <Section as="div">
-        <SectionHeading eyebrow="Theme" title={theme.name} lead={theme.summary} level={1} />
+        <SectionHeading
+          eyebrow="Theme"
+          title={theme.seo.h1 ?? theme.name}
+          lead={theme.summary}
+          level={1}
+        />
 
         <div className="mt-10 grid gap-8 lg:grid-cols-[1.2fr_1fr]">
           <div>

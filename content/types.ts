@@ -104,7 +104,14 @@ export interface Occasion {
   /** What tends to matter for this occasion specifically. */
   considerations: string[];
   packages: string[];
-  seo: { title: string; description: string };
+  /**
+   * `h1` is the on-page heading when it should differ from `name`. The name is
+   * the label in a card and a nav ("First Birthday"); the heading is what the
+   * page is about and what someone searched for ("First Birthday Decoration at
+   * Home"). Written per entry rather than generated, so none of them reads as
+   * a template. Falls back to `name`.
+   */
+  seo: { title: string; description: string; h1?: string };
 }
 
 /** A theme is the look: Cocomelon, unicorn, jungle, Spiderman… */
@@ -117,7 +124,7 @@ export interface Theme {
   /** Palette shown on the theme page. Hex values. */
   palette: string[];
   packages: string[];
-  seo: { title: string; description: string };
+  seo: { title: string; description: string; h1?: string };
 }
 
 /* -------------------------------------------------------------------------- */

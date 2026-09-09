@@ -46,7 +46,12 @@ export default async function OccasionPage({ params }: { params: Promise<{ slug:
       <Section as="div">
         <div className="grid gap-10 lg:grid-cols-[1.4fr_1fr] lg:gap-16">
           <div>
-            <SectionHeading eyebrow="Occasion" title={occasion.name} lead={occasion.summary} level={1} />
+            <SectionHeading
+              eyebrow="Occasion"
+              title={occasion.seo.h1 ?? occasion.name}
+              lead={occasion.summary}
+              level={1}
+            />
             <p className="mt-6 max-w-2xl text-[1.0625rem] leading-relaxed text-ink">{occasion.intro}</p>
           </div>
           <aside className="rounded-brand-lg border border-line bg-muted p-7">

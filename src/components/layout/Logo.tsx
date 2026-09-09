@@ -29,7 +29,7 @@ export function Logo({
           <span
             aria-hidden="true"
             className={cn(
-              "flex h-10 w-10 shrink-0 items-center justify-center rounded-brand font-serif text-[0.9375rem] font-semibold tracking-tight transition-colors",
+              "flex h-10 w-10 shrink-0 items-center justify-center rounded-brand font-heading text-[0.9375rem] font-semibold tracking-tight transition-colors",
               onDark ? "bg-primary-fg text-primary" : "bg-accent text-accent-fg group-hover:bg-accent-hover",
             )}
           >
@@ -38,7 +38,7 @@ export function Logo({
           <span className="flex flex-col leading-none">
             <span
               className={cn(
-                "font-serif text-[1.0625rem] font-semibold leading-tight tracking-tight sm:text-[1.125rem]",
+                "font-heading text-[1.0625rem] font-semibold leading-tight tracking-tight sm:text-[1.125rem]",
                 onDark ? "text-primary-fg" : "text-primary",
               )}
             >

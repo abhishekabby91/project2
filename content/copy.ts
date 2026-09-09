@@ -113,7 +113,7 @@ export const copy = {
 
   packages: {
     indexEyebrow: "Packages",
-    indexTitle: "Setups and prices",
+    indexTitle: "Decoration packages and prices",
     indexLead:
       "What each setup includes, what it does not, and how long it takes to install. No package is quoted without a look at your room first.",
     includesTitle: "What you get",

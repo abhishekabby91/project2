@@ -108,7 +108,7 @@ export default async function PackagePage({ params }: { params: Promise<{ slug: 
               <p className="text-xs font-semibold uppercase tracking-[0.12em] text-ink-muted">
                 {copy.packages.priceFromLabel}
               </p>
-              <p className="mt-1 font-serif text-4xl font-semibold text-primary">
+              <p className="mt-1 font-heading text-4xl font-semibold text-primary">
                 {formatPrice(pkg.priceFrom)}
                 {pkg.priceTo ? (
                   <span className="text-lg font-normal text-ink-muted"> – {formatPrice(pkg.priceTo)}</span>

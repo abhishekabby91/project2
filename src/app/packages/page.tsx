@@ -17,7 +17,7 @@ import { Cta } from "@/components/sections/Cta";
 export const metadata = pageMetadata({
   title: "Decoration Packages & Prices in Delhi NCR",
   description:
-    "Balloon and party decoration packages with published starting prices, setup times, and exactly what is and is not included. Filter by occasion, theme, city and budget across Delhi, Gurugram, Noida and Faridabad.",
+    "Balloon and party decoration packages with published starting prices, setup times, and exactly what is and is not included. Filter by occasion, city and budget.",
   path: "/packages",
 });
 

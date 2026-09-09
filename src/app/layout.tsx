@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Fraunces } from "next/font/google";
+import { Inter, Plus_Jakarta_Sans } from "next/font/google";
 import { site, siteUrl } from "@/content/site";
 import { indexingAllowed } from "@/lib/indexing";
 import { themeCss } from "@/lib/theme";
@@ -18,12 +18,22 @@ import "./globals.css";
    request and no layout shift, because the metrics are inlined. */
 const inter = Inter({ subsets: ["latin"], display: "swap", variable: "--font-inter" });
 
-const display = Fraunces({
+/**
+ * Headings.
+ *
+ * This was Fraunces, an editorial serif with soft/wonk axes — a lovely face
+ * that says "slow craft magazine". The site says "book a balloon arch for
+ * ₹2,499 and we will be there Saturday". Plus Jakarta Sans is warm and
+ * geometric without being childish, holds up at 3.5rem in the hero and at
+ * 1rem in the logo, and reads as commercial rather than literary.
+ *
+ * Swapping it back is this one declaration and the token name below.
+ */
+const display = Plus_Jakarta_Sans({
   subsets: ["latin"],
   display: "swap",
-  weight: "variable",
-  axes: ["SOFT", "WONK"],
-  variable: "--font-serif-display",
+  weight: ["600", "700", "800"],
+  variable: "--font-heading",
 });
 
 export const metadata: Metadata = {
