@@ -1,16 +1,10 @@
 import { chromium } from 'playwright';
+import { browserLaunchOptions } from './browser.mjs';
 import { readFileSync } from 'node:fs';
 
 const BASE = process.env.QA_BASE_URL || 'http://localhost:3000';
 
-/**
- * Honor a pre-installed browser. CI images and sandboxes often ship one that
- * doesn't match the version Playwright expects, and re-downloading it on every
- * run is slow. Set QA_BROWSER_PATH to point at an existing binary.
- */
-const launchOptions = process.env.QA_BROWSER_PATH
-  ? { executablePath: process.env.QA_BROWSER_PATH }
-  : {};
+const launchOptions = browserLaunchOptions();
 
 
 /**

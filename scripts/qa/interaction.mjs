@@ -1,4 +1,5 @@
 import { chromium } from "playwright";
+import { browserLaunchOptions } from "./browser.mjs";
 
 /**
  * Interaction, forms and SEO.
@@ -17,9 +18,7 @@ import { chromium } from "playwright";
  */
 
 const BASE = (process.env.QA_BASE_URL || "http://localhost:3000").replace(/\/$/, "");
-const launchOptions = process.env.QA_BROWSER_PATH
-  ? { executablePath: process.env.QA_BROWSER_PATH }
-  : {};
+const launchOptions = browserLaunchOptions();
 
 const results = [];
 const skipped = [];

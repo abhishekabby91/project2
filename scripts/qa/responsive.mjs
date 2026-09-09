@@ -1,4 +1,5 @@
 import { chromium } from "playwright";
+import { browserLaunchOptions } from "./browser.mjs";
 
 /**
  * Responsive layout, on the devices this market actually books from.
@@ -20,9 +21,7 @@ import { chromium } from "playwright";
  */
 
 const BASE = (process.env.QA_BASE_URL || "http://localhost:3000").replace(/\/$/, "");
-const launchOptions = process.env.QA_BROWSER_PATH
-  ? { executablePath: process.env.QA_BROWSER_PATH }
-  : {};
+const launchOptions = browserLaunchOptions();
 
 const DEVICES = [
   { name: "iPhone SE", width: 375, height: 667 },

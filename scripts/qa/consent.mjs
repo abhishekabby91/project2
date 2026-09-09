@@ -1,4 +1,5 @@
 import { chromium } from 'playwright';
+import { browserLaunchOptions } from './browser.mjs';
 
 /**
  * Consent QA.
@@ -9,9 +10,7 @@ import { chromium } from 'playwright';
  * secondary to that.
  */
 const BASE = process.env.QA_BASE_URL || 'http://localhost:3000';
-const launchOptions = process.env.QA_BROWSER_PATH
-  ? { executablePath: process.env.QA_BROWSER_PATH }
-  : {};
+const launchOptions = browserLaunchOptions();
 
 const pass = [], fail = [];
 const check = (name, ok, detail = '') => (ok ? pass : fail).push(`${name}${detail ? ' — ' + detail : ''}`);
