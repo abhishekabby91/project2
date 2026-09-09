@@ -205,6 +205,8 @@ export const copy = {
     railViewAll: (name: string) => `All ${name.toLowerCase()}`,
     railCount: (n: number) => (n === 1 ? "1 setup" : `${n} setups`),
     scrollHint: "Scroll for more",
+    scrollBack: "Scroll back",
+    scrollForward: "Scroll forward",
     cityLinksEyebrow: "By city",
     cityLinksTitle: "Pick a city to see what we set up there",
     cityLinksLead:

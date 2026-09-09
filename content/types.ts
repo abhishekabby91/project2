@@ -36,7 +36,7 @@ export interface ThemeConfig {
 export type IconName =
   | "balloon" | "cake" | "heart" | "gift" | "sparkle" | "camera" | "star"
   | "phone" | "whatsapp" | "mail" | "pin" | "clock" | "check" | "shield"
-  | "truck" | "rupee" | "calendar" | "users";
+  | "truck" | "rupee" | "calendar" | "users" | "chevron";
 
 /* -------------------------------------------------------------------------- */
 /*  Geography — the core of local SEO in this market                          */

@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { copy } from "@/content/copy";
 import { Container } from "@/components/ui/Container";
 import { Icon } from "@/components/ui/Icon";
@@ -42,6 +45,58 @@ export function Rail({
   count?: string;
   tone?: "default" | "muted";
 }) {
+  const scroller = useRef<HTMLDivElement>(null);
+  const [controls, setControls] = useState({ show: false, atStart: true, atEnd: false });
+
+  const measure = useCallback(() => {
+    const el = scroller.current;
+    if (!el) return;
+    const slack = el.scrollWidth - el.clientWidth;
+    setControls({
+      /*
+       * Only for a pointer that cannot swipe.
+       *
+       * The rails were measured after they shipped: on a 1440px desktop the
+       * themes row hid 1,812px of itself — six of ten themes — and a mouse
+       * wheel scrolls vertically, so there was no way to reach them. The swipe
+       * hint below is `lg:hidden`, which is right for a hint about swiping and
+       * wrong as the only affordance. A touch device already has the gesture;
+       * a mouse needs a button.
+       */
+      show: slack > 8 && window.matchMedia("(hover: hover) and (pointer: fine)").matches,
+      atStart: el.scrollLeft <= 4,
+      atEnd: el.scrollLeft >= slack - 4,
+    });
+  }, []);
+
+  useEffect(() => {
+    const el = scroller.current;
+    if (!el) return;
+    measure();
+    // Catches the viewport resize that turns a row that fitted into one that
+    // doesn't, and the reverse.
+    const observer = new ResizeObserver(measure);
+    observer.observe(el);
+    el.addEventListener("scroll", measure, { passive: true });
+    return () => {
+      observer.disconnect();
+      el.removeEventListener("scroll", measure);
+    };
+  }, [measure]);
+
+  const page = (direction: 1 | -1) => {
+    const el = scroller.current;
+    if (!el) return;
+    const card = el.querySelector("li");
+    const step = card ? card.getBoundingClientRect().width + 20 : el.clientWidth * 0.8;
+    el.scrollBy({
+      // Two cards a press: far enough to feel like progress, short enough to
+      // keep your place in the row.
+      left: direction * step * 2,
+      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+    });
+  };
+
   if (!items.length) return null;
 
   return (
@@ -50,7 +105,9 @@ export function Rail({
       className={cn("py-10 sm:py-12", tone === "muted" ? "bg-muted" : "bg-canvas")}
     >
       <Container size="wide">
-        <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
+        {/* min-h-9 reserves the controls' height, so the row that renders
+            before hydration is the same height as the one after it. */}
+        <div className="flex min-h-9 flex-wrap items-center justify-between gap-x-6 gap-y-2">
           <h2 id={id} className="text-[1.375rem] leading-snug sm:text-2xl">
             <Link href={href} className="transition-colors hover:text-accent">
               {title}
@@ -63,26 +120,30 @@ export function Rail({
               className="inline-flex min-h-6 items-center gap-1.5 text-sm font-semibold text-accent underline-offset-4 hover:underline"
             >
               {linkLabel}
-              <svg
-                aria-hidden="true"
-                viewBox="0 0 16 16"
-                className="h-4 w-4"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.6"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M6 3.5 10.5 8 6 12.5" />
-              </svg>
+              <Icon name="chevron" className="h-4 w-4" strokeWidth={2.25} />
             </Link>
+            {controls.show ? (
+              <div className="flex items-center gap-1.5">
+                <ScrollButton
+                  label={copy.browse.scrollBack}
+                  disabled={controls.atStart}
+                  onClick={() => page(-1)}
+                  back
+                />
+                <ScrollButton
+                  label={copy.browse.scrollForward}
+                  disabled={controls.atEnd}
+                  onClick={() => page(1)}
+                />
+              </div>
+            ) : null}
           </div>
         </div>
       </Container>
 
       {/* Full-bleed so the row runs to the screen edge on a phone, the way a
           scrollable row is expected to. */}
-      <div className="mt-6 overflow-x-auto pb-2 [scrollbar-width:thin]">
+      <div ref={scroller} className="mt-6 overflow-x-auto pb-2 [scrollbar-width:thin]">
         <ul
           className="flex snap-x snap-mandatory gap-5 px-5 sm:px-6 lg:px-8"
           style={{ scrollPaddingInline: "1.25rem" }}
@@ -104,5 +165,42 @@ export function Rail({
         </Container>
       ) : null}
     </section>
+  );
+}
+
+/**
+ * Hidden from assistive technology on purpose.
+ *
+ * Nothing in the row is hidden from the keyboard — every card is a link, so Tab
+ * reaches all of them and the browser scrolls each into view. These buttons
+ * duplicate that for a mouse, and announcing them would put two redundant stops
+ * in front of every rail on the page. Same treatment as the swipe hint.
+ */
+function ScrollButton({
+  label,
+  disabled,
+  onClick,
+  back = false,
+}: {
+  label: string;
+  disabled: boolean;
+  onClick: () => void;
+  back?: boolean;
+}) {
+  return (
+    <button
+      type="button"
+      aria-hidden="true"
+      tabIndex={-1}
+      title={label}
+      disabled={disabled}
+      onClick={onClick}
+      className={cn(
+        "inline-flex h-9 w-9 items-center justify-center rounded-full border border-line bg-surface text-primary transition-colors",
+        disabled ? "cursor-default opacity-30" : "hover:border-accent/40 hover:text-accent",
+      )}
+    >
+      <Icon name="chevron" className={cn("h-4 w-4", back && "rotate-180")} strokeWidth={2.25} />
+    </button>
   );
 }

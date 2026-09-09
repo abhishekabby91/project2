@@ -15,6 +15,7 @@ const paths: Record<IconName, React.ReactNode> = {
       <path d="M12 18.5c0 1.3 1.6 1.3 1.6 2.6" />
     </>
   ),
+  chevron: <path d="M9 5l7 7-7 7" />,
   cake: (
     <>
       <path d="M3.5 20.5h17v-6a2 2 0 00-2-2h-13a2 2 0 00-2 2z" />
