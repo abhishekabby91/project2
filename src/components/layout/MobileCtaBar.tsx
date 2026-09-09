@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { site, whatsappLink } from "@/content/site";
 import { copy } from "@/content/copy";
 import { Icon } from "@/components/ui/Icon";
 import { cn } from "@/lib/utils";
+import { useStickyBarSpace } from "@/components/layout/useStickyBarSpace";
 
 /**
  * Sticky mobile action bar. WhatsApp leads because that is how this market
@@ -16,6 +17,12 @@ import { cn } from "@/lib/utils";
 export function MobileCtaBar() {
   const [visible, setVisible] = useState(false);
   const [pageCta, setPageCta] = useState(false);
+  const bar = useRef<HTMLDivElement>(null);
+
+  // Only while it is actually on screen: the bar sits translated out of view
+  // until you have scrolled past the hero, and reserving space for something
+  // nobody can see would leave a gap under the footer of a short page.
+  useStickyBarSpace(bar, visible && !pageCta);
 
   useEffect(() => {
     const onScroll = () => setVisible(window.scrollY > 520);
@@ -41,6 +48,7 @@ export function MobileCtaBar() {
 
   return (
     <div
+      ref={bar}
       className={cn(
         "no-print fixed inset-x-0 bottom-0 z-40 border-t border-line bg-surface/95 backdrop-blur transition-transform duration-300 lg:hidden",
         visible ? "translate-y-0" : "translate-y-full",

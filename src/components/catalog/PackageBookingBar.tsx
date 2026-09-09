@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { site, whatsappLink, formatPrice } from "@/content/site";
 import { copy } from "@/content/copy";
 import { Icon } from "@/components/ui/Icon";
 import type { DecorPackage } from "@/content/types";
+import { useStickyBarSpace } from "@/components/layout/useStickyBarSpace";
 
 /**
  * The mobile booking bar on a package page.
@@ -15,6 +16,12 @@ import type { DecorPackage } from "@/content/types";
  * dialog already uses, so there are never two bars stacked in the same corner.
  */
 export function PackageBookingBar({ pkg }: { pkg: DecorPackage }) {
+  const bar = useRef<HTMLDivElement>(null);
+
+  // This one never waits for a scroll, so the space is reserved from the first
+  // paint of the page.
+  useStickyBarSpace(bar, true);
+
   useEffect(() => {
     document.documentElement.dataset.pageCta = "true";
     return () => {
@@ -24,6 +31,7 @@ export function PackageBookingBar({ pkg }: { pkg: DecorPackage }) {
 
   return (
     <div
+      ref={bar}
       className="no-print fixed inset-x-0 bottom-0 z-40 border-t border-line bg-surface/95 backdrop-blur lg:hidden [html[data-consent-open]_&]:translate-y-full"
       style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
     >
