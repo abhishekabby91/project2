@@ -1,7 +1,7 @@
 import type { Service } from "./types";
 
 /**
- * What HappyArc actually does. One entry per service; each becomes a hub page
+ * What Vibroxi actually does. One entry per service; each becomes a hub page
  * and, crossed with cities.ts, the service-in-city pages that carry most of the
  * search demand in this market.
  *

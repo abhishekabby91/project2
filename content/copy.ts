@@ -292,7 +292,6 @@ export const copy = {
     tagline: "Balloon and party decoration across Delhi NCR.",
     servicesTitle: "Setups",
     citiesTitle: "Areas",
-    companyTitle: "HappyArc",
     legalTitle: "Legal",
     cookiePreferences: "Cookie preferences",
     rights: (year: number, name: string) => `© ${year} ${name}. All rights reserved.`,

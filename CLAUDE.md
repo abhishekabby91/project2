@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-Guidance for working in this repository — HappyArc, a balloon and party
+Guidance for working in this repository — Vibroxi, a balloon and party
 decoration site for Delhi NCR.
 
 ## What this is
@@ -67,7 +67,7 @@ The specifics:
   price the owner has not agreed to honour. Replace them, then sign off
   `pricing`.
 - **Service areas.** The localities in `cities.ts` are real places; that
-  HappyArc will *travel* to them is not yet established. Coverage is a promise
+  Vibroxi will *travel* to them is not yet established. Coverage is a promise
   to someone who cannot rebook if you miss. Confirm with whoever dispatches the
   team, delete what they won't reach, sign off `locations`.
 - **Reviews.** `content/reviews.ts` is empty and must stay empty until there are

@@ -82,7 +82,10 @@ export function Footer() {
 
           <div>
             <h2 className="text-sm font-semibold uppercase tracking-[0.12em] text-white/60">
-              {copy.footer.companyTitle}
+              {/* The brand name, read from site.ts rather than kept as a
+                  second copy in copy.ts — a rename that has to be made in two
+                  places is a rename that gets made in one. */}
+              {site.businessName}
             </h2>
             <ul className="mt-4 space-y-2.5 text-sm">
               <li><Link href="/occasions" className="inline-flex min-h-6 items-center text-white/80 hover:text-primary-fg">Occasions</Link></li>

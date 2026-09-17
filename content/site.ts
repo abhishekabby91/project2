@@ -1,7 +1,7 @@
 import type { IconName, ThemeConfig } from "./types";
 
 /**
- * HappyArc — balloon and party decoration across Delhi NCR.
+ * Vibroxi — balloon and party decoration across Delhi NCR.
  *
  * ⚠️  The brand name is real. Phone, WhatsApp, email, address, the domain and
  * every trust figure below are still placeholders, and the content check will
@@ -71,15 +71,20 @@ export interface SiteConfig {
 }
 
 export const site: SiteConfig = {
-  businessName: "HappyArc",
-  shortName: "HappyArc",
+  businessName: "Vibroxi",
+  shortName: "Vibroxi",
   tagline: "Balloon & Party Decoration",
   description:
     "Balloon and party decoration at home across Delhi NCR — birthdays, anniversaries, baby showers and welcome-home surprises. Setup by our own team.",
-  url: "https://www.happyarc.in",
+  /* ⚠️  The domain the business will actually publish on. happyarc.in was the
+     previous name's and is wrong now; guessing vibroxi.in would be worse,
+     because this string is what every canonical, the sitemap and the
+     structured data point at. Set it, or set NEXT_PUBLIC_SITE_URL on the host,
+     which overrides it — and which indexing is gated on anyway. */
+  url: "https://www.yourdomain.in",
 
   logo: null,
-  monogram: "HA",
+  monogram: "V",
 
   /* Given by the owner on 7 September 2026. Two different numbers on purpose:
      calls go to one line, WhatsApp to another. Neither is signed off in

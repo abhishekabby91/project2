@@ -1,4 +1,4 @@
-# HappyArc
+# Vibroxi
 
 Balloon and party decoration across Delhi NCR — Delhi, Gurugram, Noida,
 Greater Noida and Faridabad.
@@ -22,7 +22,7 @@ npm run dev
 
 Everything about the business lives in `content/`. `src/` is generic machinery
 that renders whatever is there — it contains no prices, no place names and no
-sentences about HappyArc.
+sentences about Vibroxi.
 
 ```
 content/

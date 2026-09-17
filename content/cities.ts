@@ -1,12 +1,12 @@
 import type { City } from "./types";
 
 /**
- * The five Delhi NCR cities HappyArc operates in.
+ * The five Delhi NCR cities Vibroxi operates in.
  *
  * ⚠️  READ BEFORE EDITING
  *
  * The locality lists below are real places — sectors, blocks and landmarks that
- * exist. That much is a public fact. What is *not* yet a fact is that HappyArc
+ * exist. That much is a public fact. What is *not* yet a fact is that Vibroxi
  * will travel to each of them. Coverage is a promise made to someone planning
  * their child's birthday, and a missed setup is not recoverable.
  *

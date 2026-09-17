@@ -17,7 +17,7 @@ import { indexingAllowed } from "@/lib/indexing";
  * budget for it as one.
  *
  * What it is genuinely good for is control of the summary. An assistant asked
- * "what does HappyArc cost" will answer from something. Better that something
+ * "what does Vibroxi cost" will answer from something. Better that something
  * says "from ₹1,799, quoted after seeing the room" than a number scraped
  * without its condition attached.
  *

@@ -1,8 +1,8 @@
 {
-  "name": "happyarc",
+  "name": "vibroxi",
   "version": "1.0.0",
   "private": true,
-  "description": "HappyArc — balloon and party decoration across Delhi NCR",
+  "description": "Vibroxi — balloon and party decoration across Delhi NCR",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
