@@ -4,7 +4,7 @@ import { services } from "@/content/services";
 import { cities, getCity } from "@/content/cities";
 import { occasions } from "@/content/occasions";
 import { themes } from "@/content/themes";
-import { packages } from "@/content/packages";
+import { packages, galleryImages } from "@/content/packages";
 
 /**
  * The sitemap and `generateStaticParams` must agree. A service × city URL is
@@ -46,7 +46,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     url("/occasions", 0.8, "monthly"),
     url("/themes", 0.8, "monthly"),
     url("/cities", 0.8, "monthly"),
-    url("/gallery", 0.6, "monthly"),
+    /* Submitted only once there is something to show. A gallery with no
+       photographs is a page whose title, description and heading all promise
+       images it does not have — thin by Google's own definition, and the page
+       itself is noindex while it is empty, so listing it here would put the
+       sitemap and the page in contradiction. It returns the day a real
+       photograph lands in content/packages.ts. */
+    ...(galleryImages().length ? [url("/gallery", 0.6, "monthly")] : []),
     url("/faqs", 0.6, "monthly"),
     url("/contact", 0.7, "monthly"),
     ...services.map((s) => url(`/${s.slug}`, 0.9, "weekly")),

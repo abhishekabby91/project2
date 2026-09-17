@@ -317,3 +317,14 @@ export const getBudgetBand = (slug: string) => budgetBands.find((b) => b.slug ==
 
 /** Highest published starting price, for "from ₹X to ₹Y" copy. */
 export const highestPrice = () => Math.max(...packages.map((p) => p.priceFrom));
+
+/**
+ * Every photograph on the site, flattened, each tagged with the setup it shows.
+ *
+ * `images: []` on every package is deliberate — only photographs of setups this
+ * team actually built go in. Until one does, this is empty, and both the
+ * gallery page and the sitemap read it to decide whether there is a gallery to
+ * submit at all.
+ */
+export const galleryImages = () =>
+  packages.flatMap((pkg) => pkg.images.map((image) => ({ ...image, pkg: pkg.name })));

@@ -1,15 +1,29 @@
-import { packages } from "@/content/packages";
+import { galleryImages } from "@/content/packages";
 import { copy } from "@/content/copy";
 import { pageMetadata } from "@/lib/seo";
 import { Section, SectionHeading } from "@/components/ui/Section";
 import { Breadcrumbs } from "@/components/layout/Breadcrumbs";
 import { Cta } from "@/components/sections/Cta";
 
+const images = galleryImages();
+
+/**
+ * The title and description have to match what is on the page.
+ *
+ * While there are no photographs, promising them in a search result is a
+ * click someone regrets, and a page whose heading, description and title all
+ * describe images it does not have is thin by Google's own definition. So it
+ * goes noindex and drops out of the sitemap — `src/app/sitemap.ts` reads the
+ * same `galleryImages()` and the two must stay in step, the way the service ×
+ * city gate does. Both come back the day a real photograph lands.
+ */
 export const metadata = pageMetadata({
-  title: "Gallery — Setups We Have Built",
-  description:
-    "Photographs of balloon and party decoration setups built by our own team across Delhi NCR.",
+  title: images.length ? "Gallery — Setups We Have Built" : "Gallery",
+  description: images.length
+    ? "Photographs of balloon and party decoration setups built by our own team across Delhi NCR."
+    : "We are photographing recent setups. Ask on WhatsApp and we will send pictures from a booking like yours.",
   path: "/gallery",
+  noIndex: images.length === 0,
 });
 
 /**
@@ -19,10 +33,6 @@ export const metadata = pageMetadata({
  * content/packages.ts.
  */
 export default function GalleryPage() {
-  const images = packages.flatMap((pkg) =>
-    pkg.images.map((image) => ({ ...image, pkg: pkg.name })),
-  );
-
   return (
     <>
       <Breadcrumbs items={[{ name: "Gallery", href: "/gallery" }]} />
