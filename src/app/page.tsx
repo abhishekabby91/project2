@@ -62,6 +62,23 @@ export default function HomePage() {
                 </Button>
               </div>
 
+              {/* The phone line, in the first screenful.
+                  On a phone the header is a logo and a menu button, and the
+                  sticky bar does not appear until you are past the hero — so
+                  until now someone who wanted to ring rather than type had to
+                  open the menu to find the number. It is a link, not a third
+                  button: the two above are the decision, this is for the person
+                  who has already made it. */}
+              <p className="mt-5 text-[0.9375rem] text-white/70">
+                {copy.cta.orCall}{" "}
+                <a
+                  href={`tel:${site.phoneHref}`}
+                  className="inline-flex min-h-6 items-center font-semibold text-primary-fg underline decoration-white/40 underline-offset-4 transition-colors hover:decoration-white"
+                >
+                  {site.phone}
+                </a>
+              </p>
+
               {/* Placeholder trust points are scaffolding, not content. Reviews
                   hide while the array is empty, the email hides while it is
                   null, images hide until there are photographs — these follow

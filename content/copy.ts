@@ -26,6 +26,8 @@ export const copy = {
     bookNow: "Book now",
     bookNowLabel: (name: string) => `Book ${name} on WhatsApp`,
     checkAvailability: "Check availability",
+    /** Beside a WhatsApp button, where the phone line is the second route. */
+    orCall: "Or call",
     /** On a theme card. "View all" repeated ten times down a rail says nothing
      *  about where the link goes. */
     seeThisTheme: "See the palette",
@@ -244,13 +246,16 @@ export const copy = {
     eyebrow: "Get in touch",
     title: "Tell us the date and the room",
     lead:
-      "The fastest way to a quote is WhatsApp with a photo of the space. If you would rather write it out, the form goes to the same place.",
-    formTitle: "Send an enquiry",
+      "Message or call and you are talking to the people who will do the setup. A photo of the space and a date is enough to get a price.",
+    directTitle: "Book on WhatsApp or call",
+    directLead:
+      "Both reach the team directly. Send a photo of the room with your date and you get a price back, usually within the hour — no form, no waiting for an email.",
+    formTitle: "Or write it out",
     formNote:
-      "One field is required — your number. Everything else helps us quote faster but you can leave it and we will ask.",
+      "Slower than a message, and one field is required — your number. Everything else helps us quote faster but you can leave it and we will ask.",
     whatsappTitle: "WhatsApp",
     whatsappBody:
-      "WhatsApp — send a photo of the room and your date. Quickest route to a real quote.",
+      "Send a photo of the room and your date. Quickest route to a real quote.",
     callTitle: "Call",
     callBody: "Call this line for same-day bookings and anything that needs a conversation.",
     hoursTitle: "Hours",

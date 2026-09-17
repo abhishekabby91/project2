@@ -76,7 +76,7 @@ export function Header() {
       )}
     >
       <Container size="wide">
-        <div className="flex h-[4.5rem] items-center justify-between gap-4">
+        <div className="flex h-[4.5rem] items-center justify-between gap-3 sm:gap-4">
           <Logo />
 
           <nav ref={navRef} aria-label="Main" className="hidden lg:block">
@@ -165,22 +165,50 @@ export function Header() {
             </Button>
           </div>
 
-          <button
-            type="button"
-            aria-controls="mobile-menu"
-            aria-expanded={mobileOpen}
-            aria-label={mobileOpen ? copy.brand.closeMenu : copy.brand.openMenu}
-            onClick={() => setMobileOpen((v) => !v)}
-            className="inline-flex h-11 w-11 items-center justify-center rounded-brand border border-line text-primary lg:hidden"
-          >
-            <svg aria-hidden="true" viewBox="0 0 20 20" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round">
-              {mobileOpen ? (
-                <path d="M5 5l10 10M15 5L5 15" />
-              ) : (
-                <path d="M3 6h14M3 10h14M3 14h14" />
-              )}
-            </svg>
-          </button>
+          <div className="flex items-center gap-2 lg:hidden">
+            {/* Booking, one tap from the first screenful.
+                Until now the phone header was a logo and a menu button: the
+                desktop bar is `lg:flex`, and the sticky bar waits until you are
+                past the hero. Someone landing on a city or package page from
+                search had to open the menu before they could reach anyone.
+                Icon-only so the row still fits an iPhone SE beside the logo;
+                the labels are the accessible names. */}
+            <a
+              href={whatsappLink()}
+              target="_blank"
+              rel="noopener noreferrer"
+              data-conversion="whatsapp_click"
+              aria-label={copy.cta.whatsapp}
+              className="inline-flex h-11 w-11 items-center justify-center rounded-brand bg-accent text-accent-fg"
+            >
+              <Icon name="whatsapp" className="h-5 w-5" />
+            </a>
+
+            <a
+              href={`tel:${site.phoneHref}`}
+              aria-label={`${copy.cta.call} ${site.phone}`}
+              className="inline-flex h-11 w-11 items-center justify-center rounded-brand border border-line text-primary"
+            >
+              <Icon name="phone" className="h-5 w-5" />
+            </a>
+
+            <button
+              type="button"
+              aria-controls="mobile-menu"
+              aria-expanded={mobileOpen}
+              aria-label={mobileOpen ? copy.brand.closeMenu : copy.brand.openMenu}
+              onClick={() => setMobileOpen((v) => !v)}
+              className="inline-flex h-11 w-11 items-center justify-center rounded-brand border border-line text-primary"
+            >
+              <svg aria-hidden="true" viewBox="0 0 20 20" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round">
+                {mobileOpen ? (
+                  <path d="M5 5l10 10M15 5L5 15" />
+                ) : (
+                  <path d="M3 6h14M3 10h14M3 14h14" />
+                )}
+              </svg>
+            </button>
+          </div>
         </div>
       </Container>
 
