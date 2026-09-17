@@ -25,7 +25,20 @@ export interface SiteConfig {
   /** How the WhatsApp number is written for a human. It is a different number
    *  from the phone line, so the site has to be able to show both. */
   whatsappDisplay: string;
-  whatsappMessage: string;
+  /**
+   * The message already typed into WhatsApp when someone taps Book.
+   *
+   * It is the first thing every customer of this business ever reads from it,
+   * so it is split rather than written as one string: the date prompt has to
+   * come last, because WhatsApp puts the cursor at the end and that is where
+   * the person types.
+   */
+  whatsappMessage: {
+    /** No full stop — the page context and the full stop are added after it. */
+    opening: string;
+    /** Ends the message, trailing space intended: the cursor lands here. */
+    datePrompt: string;
+  };
   /**
    * Null until a real mailbox exists. Every mailto on the site disappears
    * while it is null, and the address is left out of structured data — a
@@ -76,7 +89,10 @@ export const site: SiteConfig = {
   phoneHref: "+918700797243",
   whatsapp: "919990597192",
   whatsappDisplay: "+91 99905 97192",
-  whatsappMessage: "Hi! I'd like to book a decoration. My date is ",
+  whatsappMessage: {
+    opening: "Hi! I'd like to book a decoration",
+    datePrompt: "My date is ",
+  },
   /* ⚠️  No mailbox yet. The owner is setting one up and will send the address.
      Leave this null until then — see the note on the interface above. */
   email: null,
@@ -175,10 +191,23 @@ export const site: SiteConfig = {
 
 export const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || site.url).replace(/\/$/, "");
 
-/** Pre-filled WhatsApp link — the primary conversion path in this market. */
+/**
+ * Pre-filled WhatsApp link — the primary conversion path in this market.
+ *
+ * The message used to read "Hi! I'd like to book a decoration. My date is "
+ * and stop there, mid-sentence, with the page context bolted on after the
+ * blank: "…My date is  (Themed Kids' Room Setup)", two spaces and all. Every
+ * booking on the site opened with it.
+ *
+ * Now the context joins the opening sentence and the date prompt ends the
+ * message, on its own line, where WhatsApp leaves the cursor. An em dash
+ * rather than a preposition because the context is not one kind of thing —
+ * a package, a city, an occasion and a theme all arrive here.
+ */
 export const whatsappLink = (context?: string) =>
   `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(
-    site.whatsappMessage + (context ? ` (${context})` : ""),
+    `${site.whatsappMessage.opening}${context ? ` — ${context}` : ""}.\n` +
+      site.whatsappMessage.datePrompt,
   )}`;
 
 /** ₹ formatting, Indian digit grouping. */
