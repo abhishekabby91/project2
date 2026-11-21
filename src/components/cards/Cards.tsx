@@ -105,13 +105,9 @@ export function ThemeCard({ theme, headingLevel = 3 }: { theme: Theme; headingLe
 }
 
 /**
- * What a setup looks like, before there are photographs of it.
- *
- * Every competitor in this market leads with a photograph, and one of this
- * team's own setups will beat anything here the day it exists — `images` wins
- * whenever it is populated. Until then the preview shows the theme palettes the
- * setup is genuinely built in, which answers "what will it look like" with
- * something true rather than with a grey rectangle or somebody else's photo.
+ * Displays a real package photograph when one has been supplied.
+ * Until then, keep the reserved photo area blank rather than showing artwork
+ * or imagery that could be mistaken for a completed setup.
  */
 export function PackagePreview({
   pkg,
