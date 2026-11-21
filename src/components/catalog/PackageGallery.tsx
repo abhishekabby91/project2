@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { copy } from "@/content/copy";
+import { whatsappLink } from "@/content/site";
 import type { DecorPackage } from "@/content/types";
 import { PackagePreview } from "@/components/cards/Cards";
 import { Icon } from "@/components/ui/Icon";
@@ -40,12 +41,25 @@ export function PackageGallery({ pkg }: { pkg: DecorPackage }) {
 
   return (
     <div className="mt-9">
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={active.src}
-        alt={active.alt}
-        className="aspect-[4/3] w-full rounded-brand-lg border border-line object-cover"
-      />
+      <a
+        href={whatsappLink(pkg.name)}
+        target="_blank"
+        rel="noopener noreferrer"
+        data-conversion="whatsapp_click"
+        aria-label={"Ask about " + pkg.name + " on WhatsApp"}
+        className="group block overflow-hidden rounded-brand-lg focus-visible:outline-2 focus-visible:outline-offset-2"
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={active.src}
+          alt={active.alt}
+          className="aspect-[4/3] w-full border border-line object-cover transition-transform duration-300 group-hover:scale-[1.02]"
+        />
+        <span className="flex items-center justify-between gap-3 bg-muted px-4 py-3 text-sm">
+          <span className="text-ink-muted">Interested in this decoration?</span>
+          <span className="font-semibold text-accent">Enquire on WhatsApp →</span>
+        </span>
+      </a>
       {images.length > 1 ? (
         <ul className="mt-3 grid grid-cols-4 gap-3 sm:grid-cols-5">
           {images.map((image, i) => (
