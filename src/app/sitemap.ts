@@ -34,11 +34,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority,
   });
 
-  const serviceCityUrls = services.flatMap((service) => {
-    const available = service.cities.length ? service.cities : cities.map((c) => c.slug);
-    return available.filter(substantive).map((city) => url(`/${service.slug}/${city}`, 0.9, "weekly"));
-  });
-
   return [
     url("/", 1, "weekly"),
     url("/decorations", 0.8, "monthly"),
@@ -56,7 +51,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     url("/faqs", 0.6, "monthly"),
     url("/contact", 0.7, "monthly"),
     ...services.map((s) => url(`/${s.slug}`, 0.9, "weekly")),
-    ...serviceCityUrls,
+    // Service × city pages remain navigable but are intentionally omitted
+    // until each combination has unique local content and can be indexed.
     ...cities.map((c) => url(`/cities/${c.slug}`, 0.8, "monthly")),
     ...occasions.map((o) => url(`/occasions/${o.slug}`, 0.7, "monthly")),
     ...themes.map((t) => url(`/themes/${t.slug}`, 0.7, "monthly")),
