@@ -4,17 +4,13 @@ import { useState } from "react";
 import { copy } from "@/content/copy";
 import { whatsappLink } from "@/content/site";
 import type { DecorPackage } from "@/content/types";
-import { PackagePreview } from "@/components/cards/Cards";
 import { cn } from "@/lib/utils";
 
 /**
  * The gallery on a package page.
  *
- * Built for the photographs that are not here yet: main image, thumbnail strip,
- * keyboard-operable, correct the moment `images` is populated. Until then it
- * shows the theme palettes at full size and says plainly that the photographs
- * are coming — which is what `content/packages.ts` asks for, and the reason
- * there is no stock imagery standing in.
+ * Real photographs appear here once supplied. Until then the photo area stays
+ * intentionally blank; the enquiry action remains available below it.
  */
 export function PackageGallery({ pkg }: { pkg: DecorPackage }) {
   const [index, setIndex] = useState(0);
