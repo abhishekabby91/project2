@@ -2,7 +2,6 @@ import Link from "next/link";
 import { Icon } from "@/components/ui/Icon";
 import { formatPrice, whatsappLink } from "@/content/site";
 import { copy } from "@/content/copy";
-import { getTheme } from "@/content/themes";
 import type { City, DecorPackage, IconName, Occasion, Service, Theme } from "@/content/types";
 import { cn } from "@/lib/utils";
 
@@ -137,39 +136,8 @@ export function PackagePreview({
     );
   }
 
-  const palettes = pkg.themes
-    .map((slug) => getTheme(slug))
-    .filter((t): t is Theme => Boolean(t));
-  const shown = palettes.slice(0, bands);
-
-  if (!shown.length) {
-    return (
-      <div aria-hidden="true" className={cn("flex items-center justify-center bg-muted", className)}>
-        <Icon name="camera" className="h-7 w-7 text-ink-muted/40" />
-      </div>
-    );
-  }
-
-  return (
-    <div className={cn("relative flex flex-col", className)}>
-      {/* Decorative: the palette names are listed properly on the package page,
-          so reading a wall of colour to a screen reader here is noise. The gap
-          plus a surface-coloured ground is what separates the bands — it keeps
-          them reading as swatches rather than as one quilt. */}
-      <span aria-hidden="true" className="flex flex-1 flex-col gap-px bg-surface">
-        {shown.map((theme) => (
-          <span key={theme.slug} className="flex flex-1">
-            {theme.palette.map((hex) => (
-              <span key={hex} className="flex-1 shadow-[inset_0_0_0_1px_rgba(0,0,0,0.07)]" style={{ backgroundColor: hex }} />
-            ))}
-          </span>
-        ))}
-      </span>
-      <span className="absolute bottom-3 left-3 rounded-full bg-black/55 px-2.5 py-1 text-[0.6875rem] font-medium text-white backdrop-blur-sm">
-        {copy.catalog.palettePreviewLabel(palettes.length)}
-      </span>
-    </div>
-  );
+  // Keep the photo area empty until the owner supplies real setup photographs.
+  return <div aria-hidden="true" className={cn("bg-muted", className)} />;
 }
 
 /** Setup time and coverage — the two questions asked before the price. */
