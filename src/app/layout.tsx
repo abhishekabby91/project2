@@ -43,7 +43,9 @@ export const metadata: Metadata = {
   },
   description: site.description,
   applicationName: site.businessName,
-  authors: [{ name: site.businessName, url: siteUrl }],
+  authors: [
+    { name: site.businessName, ...(process.env.NEXT_PUBLIC_SITE_URL ? { url: siteUrl } : {}) },
+  ],
   creator: site.businessName,
   publisher: site.businessName,
   formatDetection: { telephone: true, address: true, email: true },
