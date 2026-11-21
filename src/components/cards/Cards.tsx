@@ -240,7 +240,16 @@ export function PackageCard({
           </a>
         </div>
       </div>
-      <CoverLink href={`/packages/${pkg.slug}`} label={pkg.name} />
+      <a
+        href={whatsappLink(pkg.name)}
+        target="_blank"
+        rel="noopener noreferrer"
+        data-conversion="whatsapp_click"
+        aria-label={"Ask about " + pkg.name + " on WhatsApp"}
+        className="absolute inset-0 rounded-brand-lg focus-visible:outline-2 focus-visible:outline-offset-2"
+      >
+        <span className="sr-only">Ask about {pkg.name} on WhatsApp</span>
+      </a>
     </article>
   );
 }
