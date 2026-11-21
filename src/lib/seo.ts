@@ -42,9 +42,15 @@ export function pageMetadata({
     description,
     alternates: { canonical: url },
     // A page may opt out; an unsigned-off deployment opts every page out.
-    robots: noIndex || !indexingAllowed()
-      ? { index: false, follow: false }
-      : {
+    robots: noIndex
+      ? {
+          index: false,
+          follow: true,
+          googleBot: { index: false, follow: true, "max-image-preview": "large", "max-snippet": -1 },
+        }
+      : !indexingAllowed()
+        ? { index: false, follow: false }
+        : {
           index: true,
           follow: true,
           googleBot: {
