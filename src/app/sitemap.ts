@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { siteUrl } from "@/content/site";
+import { indexingAllowed } from "@/lib/indexing";
 import { cities } from "@/content/cities";
 import { services } from "@/content/services";
 import { occasions } from "@/content/occasions";
@@ -24,6 +25,10 @@ import { packages, galleryImages } from "@/content/packages";
  * if the content ever starts carrying them.
  */
 export default function sitemap(): MetadataRoute.Sitemap {
+  // Never publish a sitemap while the production domain or business claims
+  // are unverified. This also prevents placeholder canonical hosts leaking.
+  if (!indexingAllowed()) return [];
+
   const url = (path: string, priority: number, changeFrequency: "weekly" | "monthly") => ({
     url: `${siteUrl}${path === "/" ? "" : path}`,
     changeFrequency,
@@ -53,7 +58,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...occasions.map((o) => url(`/occasions/${o.slug}`, 0.7, "monthly")),
     ...themes.map((t) => url(`/themes/${t.slug}`, 0.7, "monthly")),
     ...packages.map((p) => url(`/packages/${p.slug}`, 0.8, "weekly")),
-    url("/privacy", 0.3, "monthly"),
-    url("/terms", 0.3, "monthly"),
   ];
 }
