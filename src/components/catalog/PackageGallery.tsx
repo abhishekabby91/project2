@@ -24,11 +24,24 @@ export function PackageGallery({ pkg }: { pkg: DecorPackage }) {
   if (!images.length) {
     return (
       <div className="mt-9">
-        <PackagePreview
-          pkg={pkg}
-          bands={4}
-          className="h-64 w-full overflow-hidden rounded-brand-lg border border-line sm:h-80"
-        />
+        <a
+          href={whatsappLink(pkg.name)}
+          target="_blank"
+          rel="noopener noreferrer"
+          data-conversion="whatsapp_click"
+          aria-label={"Ask about " + pkg.name + " on WhatsApp"}
+          className="group block overflow-hidden rounded-brand-lg focus-visible:outline-2 focus-visible:outline-offset-2"
+        >
+          <PackagePreview
+            pkg={pkg}
+            bands={4}
+            className="h-64 w-full overflow-hidden border border-line sm:h-80"
+          />
+          <span className="flex items-center justify-between gap-3 bg-muted px-4 py-3 text-sm">
+            <span className="text-ink-muted">Ask about this decoration</span>
+            <span className="font-semibold text-accent">Enquire on WhatsApp →</span>
+          </span>
+        </a>
         <p className="mt-4 flex items-start gap-2.5 rounded-brand-lg border border-dashed border-line bg-muted p-5 text-sm leading-relaxed text-ink-muted">
           <Icon name="camera" className="mt-0.5 h-4 w-4 shrink-0 text-ink-muted/60" />
           {copy.packages.noImagesNote}
