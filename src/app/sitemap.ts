@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { siteUrl } from "@/content/site";
 import { cities } from "@/content/cities";
+import { services } from "@/content/services";
 import { occasions } from "@/content/occasions";
 import { themes } from "@/content/themes";
 import { packages, galleryImages } from "@/content/packages";
