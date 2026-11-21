@@ -1,21 +1,18 @@
 import type { MetadataRoute } from "next";
 import { siteUrl } from "@/content/site";
+import { indexingAllowed } from "@/lib/indexing";
+import { cities } from "@/content/cities";
 import { services } from "@/content/services";
-import { cities, getCity } from "@/content/cities";
 import { occasions } from "@/content/occasions";
 import { themes } from "@/content/themes";
 import { packages, galleryImages } from "@/content/packages";
 
 /**
- * The sitemap and `generateStaticParams` must agree. A service × city URL is
- * only listed when the city has genuinely local content — the same gate the
- * route itself applies, so nothing is submitted to Google that would 404 or,
- * worse, resolve to a page with nothing city-specific on it.
+ * Only canonical, indexable landing pages belong in the sitemap.
+ * Service × city URLs are intentionally excluded until each pair has
+ * unique local content; those routes remain available to visitors but carry
+ * noindex directives in their metadata.
  */
-const substantive = (citySlug: string) => {
-  const city = getCity(citySlug);
-  return Boolean(city && city.localities.length >= 3 && city.localNotes.length >= 2);
-};
 
 /**
  * No `lastModified`.
@@ -28,15 +25,14 @@ const substantive = (citySlug: string) => {
  * if the content ever starts carrying them.
  */
 export default function sitemap(): MetadataRoute.Sitemap {
+  // Never publish a sitemap while the production domain or business claims
+  // are unverified. This also prevents placeholder canonical hosts leaking.
+  if (!indexingAllowed()) return [];
+
   const url = (path: string, priority: number, changeFrequency: "weekly" | "monthly") => ({
     url: `${siteUrl}${path === "/" ? "" : path}`,
     changeFrequency,
     priority,
-  });
-
-  const serviceCityUrls = services.flatMap((service) => {
-    const available = service.cities.length ? service.cities : cities.map((c) => c.slug);
-    return available.filter(substantive).map((city) => url(`/${service.slug}/${city}`, 0.9, "weekly"));
   });
 
   return [
@@ -56,12 +52,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
     url("/faqs", 0.6, "monthly"),
     url("/contact", 0.7, "monthly"),
     ...services.map((s) => url(`/${s.slug}`, 0.9, "weekly")),
-    ...serviceCityUrls,
+    // Service × city pages remain navigable but are intentionally omitted
+    // until each combination has unique local content and can be indexed.
     ...cities.map((c) => url(`/cities/${c.slug}`, 0.8, "monthly")),
     ...occasions.map((o) => url(`/occasions/${o.slug}`, 0.7, "monthly")),
     ...themes.map((t) => url(`/themes/${t.slug}`, 0.7, "monthly")),
     ...packages.map((p) => url(`/packages/${p.slug}`, 0.8, "weekly")),
-    url("/privacy", 0.3, "monthly"),
-    url("/terms", 0.3, "monthly"),
   ];
 }

@@ -1,3 +1,5 @@
+import { indexingAllowed } from "@/lib/indexing";
+
 type Block = Record<string, unknown> | null | undefined;
 
 /**
@@ -13,6 +15,9 @@ type Block = Record<string, unknown> | null | undefined;
  * not to make every caller write the same guard.
  */
 export function JsonLd({ data }: { data: Block | Block[] }) {
+  // Structured data is only safe once the canonical domain and all public
+  // business claims have been verified for indexing.
+  if (!indexingAllowed()) return null;
   const blocks = (Array.isArray(data) ? data : [data]).filter(
     (block): block is Record<string, unknown> => Boolean(block),
   );

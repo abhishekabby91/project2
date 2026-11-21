@@ -1,4 +1,5 @@
 import { galleryImages } from "@/content/packages";
+import { whatsappLink } from "@/content/site";
 import { copy } from "@/content/copy";
 import { pageMetadata } from "@/lib/seo";
 import { Section, SectionHeading } from "@/components/ui/Section";
@@ -48,16 +49,37 @@ export default function GalleryPage() {
           <ul className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {images.map((image) => (
               <li key={image.src} className="overflow-hidden rounded-brand-lg border border-line">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={image.src} alt={image.alt} className="h-64 w-full object-cover" loading="lazy" />
-                <p className="bg-surface px-4 py-3 text-sm text-ink-muted">{image.pkg}</p>
+                <a
+                  href={whatsappLink(image.pkg)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  data-conversion="whatsapp_click"
+                  aria-label={"Enquire on WhatsApp about " + image.pkg}
+                  className="group block focus-visible:outline-2 focus-visible:outline-offset-2"
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={image.src} alt={image.alt} className="h-64 w-full object-cover transition-transform duration-300 group-hover:scale-[1.02]" loading="lazy" />
+                  <span className="flex items-center justify-between gap-3 bg-surface px-4 py-3 text-sm">
+                    <span className="text-ink-muted">{image.pkg}</span>
+                    <span className="font-semibold text-accent">Ask on WhatsApp →</span>
+                  </span>
+                </a>
               </li>
             ))}
           </ul>
         ) : (
-          <p className="mt-10 max-w-2xl rounded-brand-lg border border-dashed border-line bg-muted p-7 leading-relaxed text-ink-muted">
-            {copy.gallery.empty}
-          </p>
+          <div className="mt-10 max-w-2xl rounded-brand-lg border border-dashed border-line bg-muted p-7">
+            <p className="leading-relaxed text-ink-muted">{copy.gallery.empty}</p>
+            <a
+              href={whatsappLink("Please share decoration photos and package options")}
+              target="_blank"
+              rel="noopener noreferrer"
+              data-conversion="whatsapp_click"
+              className="mt-5 inline-flex min-h-11 items-center justify-center rounded-brand bg-accent px-5 py-3 text-sm font-semibold text-accent-fg"
+            >
+              Ask for decoration photos on WhatsApp
+            </a>
+          </div>
         )}
       </Section>
       <Cta />

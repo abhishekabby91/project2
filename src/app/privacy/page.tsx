@@ -10,6 +10,7 @@ export const metadata = pageMetadata({
   title: "Privacy Policy",
   description: `How ${site.businessName} collects, uses and protects personal information, and the cookies this website sets.`,
   path: "/privacy",
+  noIndex: true,
 });
 
 export default function PrivacyPage() {

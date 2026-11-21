@@ -2,7 +2,6 @@ import Link from "next/link";
 import { Icon } from "@/components/ui/Icon";
 import { formatPrice, whatsappLink } from "@/content/site";
 import { copy } from "@/content/copy";
-import { getTheme } from "@/content/themes";
 import type { City, DecorPackage, IconName, Occasion, Service, Theme } from "@/content/types";
 import { cn } from "@/lib/utils";
 
@@ -106,23 +105,16 @@ export function ThemeCard({ theme, headingLevel = 3 }: { theme: Theme; headingLe
 }
 
 /**
- * What a setup looks like, before there are photographs of it.
- *
- * Every competitor in this market leads with a photograph, and one of this
- * team's own setups will beat anything here the day it exists — `images` wins
- * whenever it is populated. Until then the preview shows the theme palettes the
- * setup is genuinely built in, which answers "what will it look like" with
- * something true rather than with a grey rectangle or somebody else's photo.
+ * Displays a real package photograph when one has been supplied.
+ * Until then, keep the reserved photo area blank rather than showing artwork
+ * or imagery that could be mistaken for a completed setup.
  */
 export function PackagePreview({
   pkg,
   className,
-  bands = 3,
 }: {
   pkg: DecorPackage;
   className?: string;
-  /** How many theme palettes to show. The rest are counted in the label. */
-  bands?: number;
 }) {
   const image = pkg.images[0];
   if (image) {
@@ -137,39 +129,8 @@ export function PackagePreview({
     );
   }
 
-  const palettes = pkg.themes
-    .map((slug) => getTheme(slug))
-    .filter((t): t is Theme => Boolean(t));
-  const shown = palettes.slice(0, bands);
-
-  if (!shown.length) {
-    return (
-      <div aria-hidden="true" className={cn("flex items-center justify-center bg-muted", className)}>
-        <Icon name="camera" className="h-7 w-7 text-ink-muted/40" />
-      </div>
-    );
-  }
-
-  return (
-    <div className={cn("relative flex flex-col", className)}>
-      {/* Decorative: the palette names are listed properly on the package page,
-          so reading a wall of colour to a screen reader here is noise. The gap
-          plus a surface-coloured ground is what separates the bands — it keeps
-          them reading as swatches rather than as one quilt. */}
-      <span aria-hidden="true" className="flex flex-1 flex-col gap-px bg-surface">
-        {shown.map((theme) => (
-          <span key={theme.slug} className="flex flex-1">
-            {theme.palette.map((hex) => (
-              <span key={hex} className="flex-1 shadow-[inset_0_0_0_1px_rgba(0,0,0,0.07)]" style={{ backgroundColor: hex }} />
-            ))}
-          </span>
-        ))}
-      </span>
-      <span className="absolute bottom-3 left-3 rounded-full bg-black/55 px-2.5 py-1 text-[0.6875rem] font-medium text-white backdrop-blur-sm">
-        {copy.catalog.palettePreviewLabel(palettes.length)}
-      </span>
-    </div>
-  );
+  // Keep the photo area empty until the owner supplies real setup photographs.
+  return <div aria-hidden="true" className={cn("bg-muted", className)} />;
 }
 
 /** Setup time and coverage — the two questions asked before the price. */
@@ -202,7 +163,16 @@ export function PackageCard({
 }) {
   return (
     <article className={cn(cardBase, "overflow-hidden p-0")}>
-      <PackagePreview pkg={pkg} className="h-40 w-full" />
+      <a
+        href={whatsappLink(pkg.name)}
+        target="_blank"
+        rel="noopener noreferrer"
+        data-conversion="whatsapp_click"
+        aria-label={"Ask about " + pkg.name + " on WhatsApp"}
+        className="group block h-40 w-full focus-visible:outline-2 focus-visible:outline-offset-2"
+      >
+        <PackagePreview pkg={pkg} className="h-40 w-full" />
+      </a>
       <div className="flex flex-1 flex-col p-5">
         <CardHeading level={headingLevel}>{pkg.name}</CardHeading>
         {/* Clamped to two lines. A card is scanned, not read — the full
@@ -240,7 +210,6 @@ export function PackageCard({
           </a>
         </div>
       </div>
-      <CoverLink href={`/packages/${pkg.slug}`} label={pkg.name} />
     </article>
   );
 }

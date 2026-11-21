@@ -9,6 +9,7 @@ export const metadata = pageMetadata({
   title: "Terms of Service",
   description: `The terms on which ${site.businessName} provides decoration services across Delhi NCR.`,
   path: "/terms",
+  noIndex: true,
 });
 
 export default function TermsPage() {
