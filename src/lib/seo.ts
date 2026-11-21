@@ -43,25 +43,25 @@ export function pageMetadata({
     description,
     ...(hasCanonicalHost ? { alternates: { canonical: url } } : {}),
     // A page may opt out; an unsigned-off deployment opts every page out.
-    robots: noIndex
-      ? {
-          index: false,
-          follow: true,
-          googleBot: { index: false, follow: true, "max-image-preview": "large", "max-snippet": -1 },
-        }
-      : !indexingAllowed()
-        ? { index: false, follow: false }
+    robots: !indexingAllowed()
+      ? { index: false, follow: false, nocache: true }
+      : noIndex
+        ? {
+            index: false,
+            follow: true,
+            googleBot: { index: false, follow: true, "max-image-preview": "large", "max-snippet": -1 },
+          }
         : {
-          index: true,
-          follow: true,
-          googleBot: {
             index: true,
             follow: true,
-            "max-image-preview": "large",
-            "max-snippet": -1,
-            "max-video-preview": -1,
+            googleBot: {
+              index: true,
+              follow: true,
+              "max-image-preview": "large",
+              "max-snippet": -1,
+              "max-video-preview": -1,
+            },
           },
-        },
     openGraph: {
       type,
       ...(hasCanonicalHost ? { url } : {}),
