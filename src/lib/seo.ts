@@ -32,6 +32,7 @@ export function pageMetadata({
   authors,
 }: PageMetaOptions): Metadata {
   const url = `${siteUrl}${path === "/" ? "" : path}`;
+  const hasCanonicalHost = Boolean(process.env.NEXT_PUBLIC_SITE_URL);
   const fullTitle = path === "/" ? title : `${title} | ${site.businessName}`;
 
   return {
@@ -40,7 +41,7 @@ export function pageMetadata({
     // here, once by the template.
     title: { absolute: fullTitle },
     description,
-    alternates: { canonical: url },
+    ...(hasCanonicalHost ? { alternates: { canonical: url } } : {}),
     // A page may opt out; an unsigned-off deployment opts every page out.
     robots: noIndex
       ? {
@@ -63,12 +64,12 @@ export function pageMetadata({
         },
     openGraph: {
       type,
-      url,
+      ...(hasCanonicalHost ? { url } : {}),
       siteName: site.businessName,
       title: fullTitle,
       description,
       locale: "en_IN",
-      images: [{ url: image, width: 1200, height: 630, alt: site.businessName }],
+      ...(hasCanonicalHost ? { images: [{ url: image, width: 1200, height: 630, alt: site.businessName }] } : {}),
       ...(publishedTime ? { publishedTime } : {}),
       ...(authors ? { authors } : {}),
     },
@@ -76,7 +77,7 @@ export function pageMetadata({
       card: "summary_large_image",
       title: fullTitle,
       description,
-      images: [image],
+      ...(hasCanonicalHost ? { images: [image] } : {}),
     },
   };
 }
