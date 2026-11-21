@@ -112,12 +112,9 @@ export function ThemeCard({ theme, headingLevel = 3 }: { theme: Theme; headingLe
 export function PackagePreview({
   pkg,
   className,
-  bands = 3,
 }: {
   pkg: DecorPackage;
   className?: string;
-  /** How many theme palettes to show. The rest are counted in the label. */
-  bands?: number;
 }) {
   const image = pkg.images[0];
   if (image) {
