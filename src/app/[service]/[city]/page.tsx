@@ -58,6 +58,10 @@ export async function generateMetadata({ params }: { params: Promise<{ service: 
     title: `${service.name} in ${city.name}`,
     description: `${service.summary} Serving ${city.localities.slice(0, 4).map((l) => l.name).join(", ")} and across ${city.name}.`,
     path: `/${service.slug}/${city.slug}`,
+    // These pages currently reuse the same city notes across every service.
+    // Keep them accessible to visitors, but out of the index until each
+    // service/city combination has genuinely distinct local information.
+    noIndex: true,
   });
 }
 
