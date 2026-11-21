@@ -5,7 +5,6 @@ import { copy } from "@/content/copy";
 import { whatsappLink } from "@/content/site";
 import type { DecorPackage } from "@/content/types";
 import { PackagePreview } from "@/components/cards/Cards";
-import { Icon } from "@/components/ui/Icon";
 import { cn } from "@/lib/utils";
 
 /**
@@ -32,18 +31,16 @@ export function PackageGallery({ pkg }: { pkg: DecorPackage }) {
           aria-label={"Ask about " + pkg.name + " on WhatsApp"}
           className="group block overflow-hidden rounded-brand-lg focus-visible:outline-2 focus-visible:outline-offset-2"
         >
-          <PackagePreview
-            pkg={pkg}
-            bands={4}
-            className="h-64 w-full overflow-hidden border border-line sm:h-80"
+          <div
+            aria-hidden="true"
+            className="aspect-[4/3] w-full border border-line bg-muted sm:max-h-[30rem]"
           />
           <span className="flex items-center justify-between gap-3 bg-muted px-4 py-3 text-sm">
             <span className="text-ink-muted">Ask about this decoration</span>
             <span className="font-semibold text-accent">Enquire on WhatsApp →</span>
           </span>
         </a>
-        <p className="mt-4 flex items-start gap-2.5 rounded-brand-lg border border-dashed border-line bg-muted p-5 text-sm leading-relaxed text-ink-muted">
-          <Icon name="camera" className="mt-0.5 h-4 w-4 shrink-0 text-ink-muted/60" />
+        <p className="mt-4 rounded-brand-lg border border-dashed border-line p-5 text-sm leading-relaxed text-ink-muted">
           {copy.packages.noImagesNote}
         </p>
       </div>
