@@ -1,21 +1,16 @@
 import type { MetadataRoute } from "next";
 import { siteUrl } from "@/content/site";
-import { services } from "@/content/services";
-import { cities, getCity } from "@/content/cities";
+import { cities } from "@/content/cities";
 import { occasions } from "@/content/occasions";
 import { themes } from "@/content/themes";
 import { packages, galleryImages } from "@/content/packages";
 
 /**
- * The sitemap and `generateStaticParams` must agree. A service × city URL is
- * only listed when the city has genuinely local content — the same gate the
- * route itself applies, so nothing is submitted to Google that would 404 or,
- * worse, resolve to a page with nothing city-specific on it.
+ * Only canonical, indexable landing pages belong in the sitemap.
+ * Service × city URLs are intentionally excluded until each pair has
+ * unique local content; those routes remain available to visitors but carry
+ * noindex directives in their metadata.
  */
-const substantive = (citySlug: string) => {
-  const city = getCity(citySlug);
-  return Boolean(city && city.localities.length >= 3 && city.localNotes.length >= 2);
-};
 
 /**
  * No `lastModified`.
