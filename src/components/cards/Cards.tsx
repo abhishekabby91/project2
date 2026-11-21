@@ -166,7 +166,16 @@ export function PackageCard({
 }) {
   return (
     <article className={cn(cardBase, "overflow-hidden p-0")}>
-      <PackagePreview pkg={pkg} className="h-40 w-full" />
+      <a
+        href={whatsappLink(pkg.name)}
+        target="_blank"
+        rel="noopener noreferrer"
+        data-conversion="whatsapp_click"
+        aria-label={"Ask about " + pkg.name + " on WhatsApp"}
+        className="group block h-40 w-full focus-visible:outline-2 focus-visible:outline-offset-2"
+      >
+        <PackagePreview pkg={pkg} className="h-40 w-full" />
+      </a>
       <div className="flex flex-1 flex-col p-5">
         <CardHeading level={headingLevel}>{pkg.name}</CardHeading>
         {/* Clamped to two lines. A card is scanned, not read — the full
@@ -204,16 +213,6 @@ export function PackageCard({
           </a>
         </div>
       </div>
-      <a
-        href={whatsappLink(pkg.name)}
-        target="_blank"
-        rel="noopener noreferrer"
-        data-conversion="whatsapp_click"
-        aria-label={"Ask about " + pkg.name + " on WhatsApp"}
-        className="absolute inset-0 rounded-brand-lg focus-visible:outline-2 focus-visible:outline-offset-2"
-      >
-        <span className="sr-only">Ask about {pkg.name} on WhatsApp</span>
-      </a>
     </article>
   );
 }
