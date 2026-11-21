@@ -1,6 +1,6 @@
-type Block = Record<string, unknown> | null | undefined;
-
 import { indexingAllowed } from "@/lib/indexing";
+
+type Block = Record<string, unknown> | null | undefined;
 
 /**
  * Renders a JSON-LD block.
