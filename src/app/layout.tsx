@@ -37,7 +37,6 @@ const display = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl),
   title: {
     default: `${site.businessName} | ${site.tagline} in Delhi NCR`,
     template: `%s | ${site.businessName}`,
@@ -48,12 +47,14 @@ export const metadata: Metadata = {
   creator: site.businessName,
   publisher: site.businessName,
   formatDetection: { telephone: true, address: true, email: true },
-  alternates: { canonical: "/" },
+  ...(process.env.NEXT_PUBLIC_SITE_URL
+    ? { metadataBase: new URL(siteUrl), alternates: { canonical: "/" } }
+    : {}),
   openGraph: {
     type: "website",
     locale: "en_IN",
-    url: siteUrl,
     siteName: site.businessName,
+    ...(process.env.NEXT_PUBLIC_SITE_URL ? { url: siteUrl } : {}),
     title: `${site.businessName} | ${site.tagline}`,
     description: site.description,
   },
