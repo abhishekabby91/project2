@@ -13,6 +13,9 @@ type Block = Record<string, unknown> | null | undefined;
  * not to make every caller write the same guard.
  */
 export function JsonLd({ data }: { data: Block | Block[] }) {
+  // Do not emit structured data with the placeholder host while the real
+  // canonical domain has not been configured in the deployment environment.
+  if (!process.env.NEXT_PUBLIC_SITE_URL) return null;
   const blocks = (Array.isArray(data) ? data : [data]).filter(
     (block): block is Record<string, unknown> => Boolean(block),
   );
